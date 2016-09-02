@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+/*테그를 담는 콘테이너 관련 css 입니다.*/
+body {
+
+    /*margin:0;
+    padding:0;*/
+  }
+
+#tagContainer {
+  text-align: center;
+  margin: 10px auto;
+  border:0.5em solid;
+  border-radius: 5em;
+  background: #C5CAE9;
+  width: 100em;
+  height: 50em;
+}
+
+.tagCircle {
+  position: absolute;
+  background: #3F51B5;
+  /*border:2px solid;*/
+  border-radius: 50%;
+}

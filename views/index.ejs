@@ -64,16 +64,16 @@
           <!-- 원들의 평균 값을 받아와서 이상적인 크기로 만든다
           큰 원부터 차례대로 정렬된 배열을 받아와서 맨 위에서부터 왼쪽 오른쪽 번갈아가면서 배치
           아래까지 왔다면 다시 위쪽에서부터 좌에서 우 또는 우에서 좌로 큰원과 안겹치게 스켄후 배치 -->
-          <div class="tagCircle" style="  margin: 2em 0em 0em 4em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center">
+          <div class="tagCircle" style="  margin: 2em 0em 0em 4em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
               커몬커몬
           </div>
-          <div class="tagCircle" style="  margin: 2em 0em 0em 40em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center">
+          <div class="tagCircle" style="  margin: 2em 0em 0em 40em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
               커몬커몬
           </div>
-          <div class="tagCircle" style="  margin: 2em 0em 0em 60em; width: 10em; height: 10em;  line-height: 10em; font-size: 0.5em;" data-content="나오나요????" data-position="left center">
+          <div class="tagCircle" style="  margin: 2em 0em 0em 60em; width: 10em; height: 10em;  line-height: 10em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
               커몬커몬
           </div>
-          <div class="tagCircle" style="  margin: 6em 0em 0em 20em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center">
+          <div class="tagCircle" style="  margin: 6em 0em 0em 20em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center" value="1:1">
               1 : 1 채팅
           </div>
         </div>
@@ -132,7 +132,23 @@ $(".drawer-toggle i").click(
       $("body").css("overflow-y","hidden");
       $(this).popup("hide").css("z-index", "999").animate( {width:"5000px", height:"5000px", margin:"-2500px 0 0 -2500px"}, 800 , function(){
         $('#all').transition('scale');
-        //태그의 깊이에 따라 색이 바뀐다
+
+        var val = $(this).attr('value');
+        //alert(val);
+        if(val == "1:1")
+        {
+          $.ajax({
+            type:"GET",
+            url:'/',
+            data:{"tagName":val},
+            success:function(args){
+                //alert("새 페이지");
+            },
+            error:function(request,status,error){
+              alert("code:"+request.status+"\n"+"error:"+error);
+             }
+          });
+        }
         //에이젝스로 값을 가져와서 다시 테그서클을 추가시켜주자
       });
     }

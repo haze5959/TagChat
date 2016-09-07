@@ -128,7 +128,7 @@
     <script>
 
     $(function(){
-      var socket = io('http://localhost:3000/');
+      var socket = io.connect();
       socket.on('my message', function (msg) {
         $('#messages').append($('<p class="talk me">').text(msg));
       });

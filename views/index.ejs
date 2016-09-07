@@ -80,7 +80,10 @@
       </div>
     </div>
 
-
+    <!-- 폼으로 전송할 값들  -->
+    <form action="/" id="tagNameForm" role="form" method="GET">
+        <input type="hidden" id="tagNameVal" name="tagName" value="">
+    </form>
 
 
 
@@ -137,17 +140,9 @@ $(".drawer-toggle i").click(
         //alert(val);
         if(val == "1:1")
         {
-          $.ajax({
-            type:"GET",
-            url:'/',
-            data:{"tagName":val},
-            success:function(args){
-                //alert("새 페이지");
-            },
-            error:function(request,status,error){
-              alert("code:"+request.status+"\n"+"error:"+error);
-             }
-          });
+          $("#tagNameVal").attr('value', '1:1');
+          //1:1 채팅방 생성
+          $("#tagNameForm").submit();
         }
         //에이젝스로 값을 가져와서 다시 테그서클을 추가시켜주자
       });

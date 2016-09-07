@@ -6,10 +6,13 @@ var fs = require('fs');
 router.get('/', function(req, res, next) {
   console.log("get 들어왔다");
 
-  console.log(req.query.tagName);
+  console.log(JSON.parse(req.query));
   if(req.query.tagName  == "1:1")
   {
     console.log("성공!!");
+    //res.redirect('index');
+    //res.location('http://localhost:3000/');
+    //res.redirect('http://google.com');
     // fs.readFile('dalkom_talk',function(error, data){
     //   res.writeHead(200, {'Content-Type': 'text/html'});
     //   res.end(data);
@@ -26,10 +29,10 @@ router.get('/', function(req, res, next) {
 
 
 
-// //임시 채팅방 테스트
-// router.get('/test', function(req, res, next) {
-//   res.render('dalkom_talk', { title: '1:1 채팅방' });
-// });
+//임시 채팅방 테스트
+router.get('/test', function(req, res, next) {
+  res.render('dalkom_talk', { title: '1:1 채팅방' });
+});
 
 
 

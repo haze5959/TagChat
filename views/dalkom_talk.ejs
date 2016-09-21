@@ -1,162 +1,181 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no" />
-    <title><%=title%></title>
-    <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/semantic.min.js"></script>
-    <script src="js/socket.io.js"></script>
-    <link type="text/css" rel="stylesheet" href="css/tagHeader.css" />
-    <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no" />
+  <title><%=title%></title>
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <script src="js/socket.io.js"></script>
+  <!-- <link type="text/css" rel="stylesheet" href="css/tagHeader.css" />
+  <link type="text/css" rel="stylesheet" href="css/semantic.min.css" /> -->
 
 
-    <style media="screen">
-    .talk {
-      position: relative;
-      padding: 15px;
-      margin: 1em 0 1em;
-      color: black;
-      -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
-      border-radius: 10px;
-      width: auto; }
+  <style media="screen">
+  .talk {
+    position: relative;
+    padding: 15px;
+    margin: 1em 0 1em;
+    color: black;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    width: auto; }
 
     .talk.other {
       margin-left: 30px;
       border: 5px solid #B0BEC5;
       background: #B0BEC5; }
 
-    .talk.me {
-      margin-right: 30px;
-      border: 5px solid #ffec42;
-      background-color: #ffec42; }
+      .talk.me {
+        margin-right: 30px;
+        border: 5px solid #ffec42;
+        background-color: #ffec42; }
 
-    .talk:before {
-      content: "";
-      position: absolute;
-      bottom: -20px;
-      left: 40px;
-      border-width: 20px 20px 0;
-      border-style: solid;
-      border-color: #5a8f00 transparent;
-      /* reduce the damage in FF3.0 */
-      display: block;
-      width: 0; }
+        .talk:before {
+          content: "";
+          position: absolute;
+          bottom: -20px;
+          left: 40px;
+          border-width: 20px 20px 0;
+          border-style: solid;
+          border-color: #5a8f00 transparent;
+          /* reduce the damage in FF3.0 */
+          display: block;
+          width: 0; }
 
-    /* creates the smaller  triangle */
-    .talk:after {
-      content: "";
-      position: absolute;
-      bottom: -13px;
-      left: 47px;
-      border-width: 13px 13px 0;
-      border-style: solid;
-      border-color: #fff transparent;
-      /* reduce the damage in FF3.0 */
-      display: block;
-      width: 0; }
+          /* creates the smaller  triangle */
+          .talk:after {
+            content: "";
+            position: absolute;
+            bottom: -13px;
+            left: 47px;
+            border-width: 13px 13px 0;
+            border-style: solid;
+            border-color: #fff transparent;
+            /* reduce the damage in FF3.0 */
+            display: block;
+            width: 0; }
 
-    /* creates the larger triangle */
-    .talk.other:before {
-      top: 10px;
-      bottom: auto;
-      left: -30px;
-      border-width: 15px 30px 15px 0;
-      border-color: transparent #B0BEC5; }
+            /* creates the larger triangle */
+            .talk.other:before {
+              top: 10px;
+              bottom: auto;
+              left: -30px;
+              border-width: 15px 30px 15px 0;
+              border-color: transparent #B0BEC5; }
 
-    /* creates the smaller  triangle */
-    .talk.other:after {
-      top: 16px;
-      bottom: auto;
-      left: -21px;
-      border-width: 9px 21px 9px 0;
-      border-color: transparent #B0BEC5; }
+              /* creates the smaller  triangle */
+              .talk.other:after {
+                top: 16px;
+                bottom: auto;
+                left: -21px;
+                border-width: 9px 21px 9px 0;
+                border-color: transparent #B0BEC5; }
 
-    .talk.me:before {
-      top: 10px;
-      /* controls vertical position */
-      bottom: auto;
-      left: auto;
-      right: -30px;
-      /* value = - border-left-width - border-right-width */
-      border-width: 15px 0 15px 30px;
-      border-color: transparent #ffec42; }
+                .talk.me:before {
+                  top: 10px;
+                  /* controls vertical position */
+                  bottom: auto;
+                  left: auto;
+                  right: -30px;
+                  /* value = - border-left-width - border-right-width */
+                  border-width: 15px 0 15px 30px;
+                  border-color: transparent #ffec42; }
 
-    .talk.me:after {
-      top: 16px;
-      bottom: auto;
-      left: auto;
-      right: -21px;
-      border-width: 9px 0 9px 21px;
-      border-color: transparent #ffec42; }
+                  .talk.me:after {
+                    top: 16px;
+                    bottom: auto;
+                    left: auto;
+                    right: -21px;
+                    border-width: 9px 0 9px 21px;
+                    border-color: transparent #ffec42; }
 
-    .msg {
-      display: inline-block;
-      height: 34px;
-      padding: 6px 12px;
-      font-size: 14px;
-      line-height: 1.42857;
-      color: #555555;
-      background-color: #fff;
-      background-image: none;
-      border: 0px solid #ccc;
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px; }
+                    .msg {
+                      display: inline-block;
+                      height: 34px;
+                      width: 600px;
+                      padding: 6px 12px;
+                      font-size: 14px;
+                      line-height: 1.42857;
+                      color: #555555;
+                      background-color: #fff;
+                      background-image: none;
+                      border: 0px solid #ccc;
+                      border-top-left-radius: 4px;
+                      border-bottom-left-radius: 4px; }
 
-    .send {
-      background-color: #ffec42;
-      display: inline-block;
-      margin-bottom: 0;
-      font-weight: normal;
-      text-align: center;
-      vertical-align: middle;
-      border: 0px solid transparent;
-      height: 46px;
-      padding: 6px 12px;
-      font-size: 14px;
-      line-height: 1.42857;
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px; }
+                      .send {
+                        background-color: #ffec42;
+                        display: inline-block;
+                        margin-bottom: 0;
+                        font-weight: normal;
+                        text-align: center;
+                        vertical-align: middle;
+                        border: 0px solid transparent;
+                        height: 46px;
+                        padding: 6px 12px;
+                        font-size: 14px;
+                        line-height: 1.42857;
+                        border-top-right-radius: 4px;
+                        border-bottom-right-radius: 4px; }
 
-    .msgbox {
-      width: auto;
-      height: 350px; }
+                        .msgbox {
+                          width: auto;
+                          height: 600px;
+                          overflow-y: scroll;
+                          overflow-x: hidden;
+                          /*white-space:pre;*/
+                        }
 
-    </style>
+                          </style>
 
-    <script>
+                          <script>
 
-    $(function(){
-      var socket = io.connect();
-      socket.on('my message', function (msg) {
-        $('#messages').append($('<p class="talk me">').text(msg));
-      });
-      socket.on('other message', function (msg) {
-        $('#messages').append($('<p class="talk other">').text(msg));
-      });
+                          $(function(){
+                            var MBox = document.getElementById("messages");
+                            var socket = io.connect();
+                            socket.on('my message', function (msg) {
+                              if(msg != "")
+                              {
+                                $('#messages').append($('<p class="talk me">').text(msg));
+                                MBox.scrollTop = MBox.scrollHeight;
+                              }
+                            });
+                            socket.on('other message', function (msg) {
+                              $('#messages').append($('<p class="talk other">').text(msg));
+                              MBox.scrollTop = MBox.scrollHeight;
+                            });
 
-      $("#input").keyup(function(key){
-        if(key.keyCode==13){
-          socket.emit('message', $("#input").val());
-          $("#input").val("");
-        }
-      });
-      $("#btn").on('click', function(){
-        socket.emit('message', $("#input").val());
-        $("#input").val("");
-      });
-    })
+                            $("#input").keyup(function(key){
+                              if(key.keyCode==13){
+                                if(key.ctrlKey){
+                                  //$(this).value = msg = msg + "&#13;";
+                                  var textVal = $("#input").val();
+                                  textVal = textVal + "&#13;def";
+                                   $("#input").val(textVal);
+                                }
+                                else {
+                                  socket.emit('message', $("#input").val());
+                                  $("#input").val("");
+                                }
+                              }
+                            });
+                            $("#btn").on('click', function(){
+                              socket.emit('message', $("#input").val());
+                              $("#input").val("");
+                            });
+                          })
 
-    </script>
+                          </script>
 
-  </head>
-  <body>
-    <div class="background" >
-      <div class ="msgbox" id="messages">
-    </div>
-        <input id="input" class="msg" type="text"/>
-          <button id="btn" class="send" type="button">전송</button>
-    </div>
-  </body>
-</html>
+                        </head>
+                        <body>
+                          <div class="background" >
+                            <div class ="msgbox" id="messages">
+                            </div>
+                            <input id="input" class="msg" type="text"/>
+                            <button id="btn" class="send" type="button">전송</button>
+                          </div>
+                        </body>
+                        </html>

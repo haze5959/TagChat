@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no" />
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="css/tagContainer.css" />
+  <link type="text/css" rel="stylesheet" href="css/tagHeader.css" />
+  <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
+</head>
+<body class="pushable">
+
+  <!-- 로딩할 때 나오는거 -->
+  <div id="loading">로딩  중....</div>
+  <!-- http://story.pxd.co.kr/922 여기 들어가서 해봐-->
+
+
+  <!-- 해더 부분 -->
+  <div class="ui sidebar inverted vertical menu left">
+
+    <div class="ui card">
+      <div class="image">
+        <img src="img/no_img.gif">
+      </div>
+      <div class="content">
+        <a class="header">권 오 큐</a>
+        <div class="description">
+          이힛이힛 으햇으햇
+        </div>
+      </div>
+      <div class="extra content">
+        <a>
+          <i class="user icon"></i>
+          여기 메일 넣을거야
+        </a>
+      </div>
+    </div>
+
+    <a class="item">
+      1
+    </a>
+    <a class="item">
+      2
+    </a>
+    <a class="item">
+      3
+    </a>
+    <div class="developer">
+      TagChat Version 0.1
+    </div>
+  </div>
+  <div class="pusher">
+    <div id="all" style="display: none;">
+      <span class="backgroundImg" style="background:#E8EAF6; width:100%; height:100%; position:fixed; z-index:-998;"></span>
+      <header id="header">
+        <div class="drawer-toggle">
+          <i class="circular large users icon"></i>
+        </div>
+        <h2>오큐.study</h2>
+      </header>
+
+      <!-- <div id="tagContainer">
+
+    </div> -->
+    <center>
+      <embed height="700px" width="800px" src="/test"></embed>
+    </center>
+  </div>
+</div>
+
+<!-- 폼으로 전송할 값들  -->
+<form action="/" id="tagNameForm" role="form" method="GET">
+  <input type="hidden" id="tagNameVal" name="tagName" value="">
+</form>
+
+
+
+</body>
+
+<script type="text/javascript">
+//로딩페이지
+$(document).ready(function() {
+  $('#loading').hide();
+  $('#all').transition('scale');
+});
+
+//navbar 관련
+$(".drawer-toggle i").hover(function(){
+  $(this).addClass("teal");
+}, function(){
+  $(this).removeClass("teal");
+});
+
+$(".drawer-toggle i").click(
+  function(){
+    $('.ui.sidebar').sidebar('toggle');
+  });
+  </script>
+  </html>

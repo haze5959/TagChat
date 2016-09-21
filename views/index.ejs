@@ -1,107 +1,108 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no" />
-    <title><%=title%></title>
-    <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/semantic.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="css/tagContainer.css" />
-    <link type="text/css" rel="stylesheet" href="css/tagHeader.css" />
-    <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no" />
+  <title><%=title%></title>
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="css/tagContainer.css" />
+  <link type="text/css" rel="stylesheet" href="css/tagHeader.css" />
+  <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
+</head>
+<body>
 
-<!-- 로딩할 때 나오는거 -->
-    <div id="loading">로딩  중....</div>
-    <!-- http://story.pxd.co.kr/922 여기 들어가서 해봐-->
+  <!-- 로딩할 때 나오는거 -->
+  <div id="loading">로딩  중....</div>
+  <!-- http://story.pxd.co.kr/922 여기 들어가서 해봐-->
 
-    <div id="all" style="display: none">
-      <span class="backgroundImg" style="background:#E8EAF6; width:100%; height:100%; position:fixed; z-index:-998;"></span>
+
   <!-- 해더 부분 -->
-      <div class="ui sidebar inverted vertical menu">
+  <div class="ui sidebar inverted vertical menu">
 
-        <div class="ui card">
-          <div class="image">
-            <img src="img/no_img.gif">
-          </div>
-          <div class="content">
-            <a class="header">권 오 큐</a>
-            <div class="description">
-              이힛이힛 으햇으햇
-            </div>
-          </div>
-          <div class="extra content">
-            <a>
-              <i class="user icon"></i>
-              여기 메일 넣을거야
-            </a>
-          </div>
-        </div>
-
-        <a class="item">
-          1
-        </a>
-        <a class="item">
-          2
-        </a>
-        <a class="item">
-          3
-        </a>
-        <div class="developer">
-          TagChat Version 0.1
+    <div class="ui card">
+      <div class="image">
+        <img src="img/no_img.gif">
+      </div>
+      <div class="content">
+        <a class="header">권 오 큐</a>
+        <div class="description">
+          이힛이힛 으햇으햇
         </div>
       </div>
-      <div class="pusher">
-        <header id="header">
-            <div class="drawer-toggle">
-              <i class="circular large users icon"></i>
-    		    </div>
-            <h2>오큐.study</h2>
-        </header>
-
-        <div id="tagContainer">
-          <!-- 원들의 평균 값을 받아와서 이상적인 크기로 만든다
-          큰 원부터 차례대로 정렬된 배열을 받아와서 맨 위에서부터 왼쪽 오른쪽 번갈아가면서 배치
-          아래까지 왔다면 다시 위쪽에서부터 좌에서 우 또는 우에서 좌로 큰원과 안겹치게 스켄후 배치 -->
-          <div class="tagCircle" style="  margin: 2em 0em 0em 4em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
-              커몬커몬
-          </div>
-          <div class="tagCircle" style="  margin: 2em 0em 0em 40em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
-              커몬커몬
-          </div>
-          <div class="tagCircle" style="  margin: 2em 0em 0em 60em; width: 10em; height: 10em;  line-height: 10em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
-              커몬커몬
-          </div>
-          <div class="tagCircle" style="  margin: 6em 0em 0em 20em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center" value="1:1">
-              1 : 1 채팅
-          </div>
-        </div>
+      <div class="extra content">
+        <a>
+          <i class="user icon"></i>
+          여기 메일 넣을거야
+        </a>
       </div>
     </div>
 
-    <!-- 폼으로 전송할 값들  -->
-    <form action="/" id="tagNameForm" role="form" method="GET">
-        <input type="hidden" id="tagNameVal" name="tagName" value="">
-    </form>
+    <a class="item">
+      1
+    </a>
+    <a class="item">
+      2
+    </a>
+    <a class="item">
+      3
+    </a>
+    <div class="developer">
+      TagChat Version 0.1
+    </div>
+  </div>
+  <div class="pusher">
+    <div id="all" style="display: none">
+      <span class="backgroundImg" style="background:#E8EAF6; width:100%; height:100%; position:fixed; z-index:-998;"></span>
+      <header id="header">
+        <div class="drawer-toggle">
+          <i class="circular large users icon"></i>
+        </div>
+        <h2>오큐.study</h2>
+      </header>
+
+      <div id="tagContainer">
+        <!-- 원들의 평균 값을 받아와서 이상적인 크기로 만든다
+        큰 원부터 차례대로 정렬된 배열을 받아와서 맨 위에서부터 왼쪽 오른쪽 번갈아가면서 배치
+        아래까지 왔다면 다시 위쪽에서부터 좌에서 우 또는 우에서 좌로 큰원과 안겹치게 스켄후 배치 -->
+        <div class="tagCircle" style="  margin: 2em 0em 0em 4em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
+          커몬커몬
+        </div>
+        <div class="tagCircle" style="  margin: 2em 0em 0em 40em; width: 5em; height: 5em;  line-height: 5em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
+          커몬커몬
+        </div>
+        <div class="tagCircle" style="  margin: 2em 0em 0em 60em; width: 10em; height: 10em;  line-height: 10em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
+          커몬커몬
+        </div>
+        <div class="tagCircle" style="  margin: 6em 0em 0em 20em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center" value="1:1">
+          1 : 1 채팅
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 폼으로 전송할 값들  -->
+  <form action="/" id="tagNameForm" role="form" method="GET">
+    <input type="hidden" id="tagNameVal" name="tagName" value="">
+  </form>
 
 
 
-  </body>
+</body>
 
-  <script type="text/javascript">
-  //로딩페이지
-  $(document).ready(function() {
-   $('#loading').hide();
-   $('#all').transition('scale');
-  });
+<script type="text/javascript">
+//로딩페이지
+$(document).ready(function() {
+  $('#loading').hide();
+  $('#all').transition('scale');
+});
 
 //navbar 관련
 $(".drawer-toggle i").hover(function(){
-      $(this).addClass("teal");
-    }, function(){
-      $(this).removeClass("teal");
-    });
+  $(this).addClass("teal");
+}, function(){
+  $(this).removeClass("teal");
+});
 
 $(".drawer-toggle i").click(
   function(){
@@ -115,13 +116,13 @@ $(".drawer-toggle i").click(
     inline   : true,
     hoverable: true,
     delay: {
-    show: 300,
-    hide: 800
+      show: 300,
+      hide: 800
     }
   });
 
   $(".tagCircle").hover(function(){ //호버했을때
-        $(this).transition('jiggle', function(){ }).transition('clear queue');
+    $(this).transition('jiggle', function(){ }).transition('clear queue');
   }, function(){
     //콜백
   });
@@ -150,4 +151,4 @@ $(".drawer-toggle i").click(
   });
 
   </script>
-</html>
+  </html>

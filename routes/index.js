@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
   if(req.query.tagName  == "1:1")
   {
-    res.render('dalkom_talk', { title: '1:1 채팅방' });
+    res.render('oneoneChat', { title: '1:1 채팅방' });
   }
   else
   {

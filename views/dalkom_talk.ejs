@@ -7,8 +7,7 @@
   <script src="js/jquery-3.1.0.min.js"></script>
   <script src="js/semantic.min.js"></script>
   <script src="js/socket.io.js"></script>
-  <!-- <link type="text/css" rel="stylesheet" href="css/tagHeader.css" />
-  <link type="text/css" rel="stylesheet" href="css/semantic.min.css" /> -->
+  <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
 
 
   <style media="screen">
@@ -93,7 +92,7 @@
 
                     .msg {
                       display: inline-block;
-                      height: 34px;
+                      height: 46px;
                       width: 600px;
                       padding: 6px 12px;
                       font-size: 14px;
@@ -125,57 +124,77 @@
                           height: 600px;
                           overflow-y: scroll;
                           overflow-x: hidden;
-                          /*white-space:pre;*/
                         }
 
-                          </style>
+                        #input {
+                          vertical-align: middle;
+                          resize: none;
+                        }
 
-                          <script>
+                        </style>
 
-                          $(function(){
-                            var MBox = document.getElementById("messages");
-                            var socket = io.connect();
-                            socket.on('my message', function (msg) {
-                              if(msg != "")
-                              {
-                                $('#messages').append($('<p class="talk me">').text(msg));
-                                MBox.scrollTop = MBox.scrollHeight;
-                              }
-                            });
-                            socket.on('other message', function (msg) {
-                              $('#messages').append($('<p class="talk other">').text(msg));
+                        <script>
+
+                        $(function(){
+                          var MBox = document.getElementById("messages");
+                          var socket = io.connect();
+                          socket.on('my message', function (msg) {
+                            if(msg != "")
+                            {
+                              var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                              $('#messages').append($('<p class="talk me">').html(htmlMsg));
                               MBox.scrollTop = MBox.scrollHeight;
-                            });
+                            }
+                          });
+                          socket.on('other message', function (msg) {
+                            var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ htmlMsg);
+                            //$('#messages.ui.event.content').append($('<p class="talk other">').html(htmlMsg));
+                            MBox.scrollTop = MBox.scrollHeight;
 
-                            $("#input").keyup(function(key){
-                              if(key.keyCode==13){
-                                if(key.ctrlKey){
-                                  //$(this).value = msg = msg + "&#13;";
-                                  var textVal = $("#input").val();
-                                  textVal = textVal + "&#13;def";
-                                   $("#input").val(textVal);
-                                }
-                                else {
-                                  socket.emit('message', $("#input").val());
-                                  $("#input").val("");
-                                }
+
+                            // <div class="ui feed">
+                            //   <div class="event">
+                            //     <div class="label">
+                            //       <img src="/images/avatar/small/elliot.jpg">
+                            //     </div>
+                            //     <div class="content">
+                            //       You added Elliot Fu to the group <a>Coworkers</a>
+                            //     </div>
+                            //   </div>
+                            // </div>
+                          });
+
+                          $("#input").keyup(function(key){
+                            if(key.keyCode==13){
+                              if(key.ctrlKey){
+                                console.log("진입2");
+                                //$(this).value = msg = msg + "&#13;";
+                                var textVal = $("#input").val();
+                                textVal = textVal + "\n";
+                                $("#input").val(textVal);
                               }
-                            });
-                            $("#btn").on('click', function(){
-                              socket.emit('message', $("#input").val());
-                              $("#input").val("");
-                            });
-                          })
+                              else {
+                                socket.emit('message', $("#input").val());
+                                $("#input").val("");
+                              }
+                            }
+                          });
+                          $("#btn").on('click', function(){
+                            socket.emit('message', $("#input").val());
+                            $("#input").val("");
+                          });
+                        })
 
-                          </script>
+                        </script>
 
-                        </head>
-                        <body>
-                          <div class="background" >
-                            <div class ="msgbox" id="messages">
-                            </div>
-                            <input id="input" class="msg" type="text"/>
-                            <button id="btn" class="send" type="button">전송</button>
+                      </head>
+                      <body>
+                        <div class="background" >
+                          <div class ="msgbox" id="messages">
                           </div>
-                        </body>
-                        </html>
+                          <textarea id="input" class="msg" type="text"></textarea>
+                          <button id="btn" class="send" type="button">전송</button>
+                        </div>
+                      </body>
+                      </html>

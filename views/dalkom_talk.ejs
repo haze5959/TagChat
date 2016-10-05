@@ -14,7 +14,7 @@
   .talk {
     position: relative;
     padding: 15px;
-    margin: 1em 0 1em;
+    margin: 10px 0 10px;
     color: black;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -103,7 +103,9 @@
                       background-image: none;
                       border: 0px solid #ccc;
                       border-top-left-radius: 4px;
-                      border-bottom-left-radius: 4px; }
+                      border-bottom-left-radius: 4px;
+
+                    }
 
                       .send {
                         background-color: #ffec42;
@@ -136,6 +138,8 @@
 
                         <script>
                         var text_color = "black";
+                        var text_size = "15px";
+                        var text_event = "event_1";
 
                         $(function(){
                           var MBox = document.getElementById("messages");
@@ -144,15 +148,17 @@
                             if(msg.content != "")
                             {
                               var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                              $('#messages').append($('<p class="talk me" style="color:' + msg.color + ';">').html(htmlMsg));
+                              $('#messages').append($('<p class="talk me ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
                               MBox.scrollTop = MBox.scrollHeight;
                             }
                           });
                           socket.on('other message', function (msg) {
-                            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; padding-top:10px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other" style="color:' + msg.color + ';">'+ htmlMsg);
-                            //$('#messages.ui.event.content').append($('<p class="talk other">').html(htmlMsg));
-                            MBox.scrollTop = MBox.scrollHeight;
+                            if(msg.content != "")
+                            {
+                              var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                              $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
+                              MBox.scrollTop = MBox.scrollHeight;
+                            }
                           });
 
                           $("#input").keyup(function(key){
@@ -163,14 +169,14 @@
                                 $("#input").val(textVal);
                               }
                               else {
-                                var data_json = {"content" : $("#input").val(), "color" : text_color};
+                                var data_json = {"content" : $("#input").val(), "color" : text_color, "size" : text_size, "event" : text_event};
                                 socket.emit('message', data_json);
                                 $("#input").val("");
                               }
                             }
                           });
                           $("#btn").on('click', function(){
-                            var data_json = {"content" : $("#input").val(), "color" : text_color};
+                            var data_json = {"content" : $("#input").val(), "color" : text_color, "size" : text_size, "event" : text_event};
                             socket.emit('message', data_json);
                             $("#input").val("");
                           });
@@ -183,12 +189,12 @@
                         <div class="background" >
                           <div class ="msgbox" id="messages">
                           </div>
-                          <textarea id="input" class="msg" type="text" style="color:black;"></textarea>
+                          <textarea id="input" class="msg" type="text" wrap="physical" style="color:black;"></textarea>
                           <button id="btn" class="send" type="button">전송</button>
                         </div>
 
                         <!-- 쓰기 효과!!! -->
-                        <div id="writeColor" class="ui floating labeled icon dropdown button">
+                        <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
                           <i class="filter icon"></i>
                           <span class="text">검정</span>
                           <div class="menu">
@@ -203,17 +209,32 @@
                             </div>
                           </div>
                         </div>
-                        <div id="writeEvent" class="ui floating labeled icon dropdown button">
+                        <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+                          <i class="filter icon"></i>
+                          <span class="text">15px</span>
+                          <div class="menu">
+                            <div class="item active selected" data-value="15px">
+                              15px
+                            </div>
+                            <div class="item" style="font-size:15px;" data-value="25px">
+                              25px
+                            </div>
+                            <div class="item" style="font-size:20px;" data-value="40px">
+                              40px
+                            </div>
+                          </div>
+                        </div>
+                        <div id="writeEvent" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
                           <i class="filter icon"></i>
                           <span class="text">효과 없음</span>
                           <div class="menu">
-                            <div class="item active selected" data-value="1">
+                            <div class="item active selected" data-value="event_1">
                               효과 없음
                             </div>
-                            <div class="item" data-value="2">
+                            <div class="item" data-value="event_2">
                               지진
                             </div>
-                            <div class="item" data-value="3">
+                            <div class="item" data-value="event_3">
                               벌렁벌렁
                             </div>
                           </div>
@@ -228,21 +249,71 @@
 
                           switch (value) {
                             case "black": //블랙
-                              $('#input.msg').css("color", "black");
-                              text_color = "black";
+                            $('#input.msg').css("color", "black");
+                            text_color = "black";
                             break;
                             case "red": //레드
-                              $('#input.msg').css("color", "red");
-                              text_color = "red";
+                            $('#input.msg').css("color", "red");
+                            text_color = "red";
                             break;
                             case "blue": //블루
-                              $('#input.msg').css("color", "blue");
-                              text_color = "blue";
+                            $('#input.msg').css("color", "blue");
+                            text_color = "blue";
                             break;
                             default:
 
                           }
                         }
                       });
+                      $('#writeSize.ui.dropdown').dropdown({
+                        onChange: function(value){
+
+                          switch (value) {
+                            case "15px": //10
+                            $('#input.msg').css("font-size", "15px");
+                            text_size = "15px";
+                            break;
+                            case "25px": //15
+                            $('#input.msg').css("font-size", "25px");
+                            text_size = "25px";
+                            break;
+                            case "40px": //20px
+                            $('#input.msg').css("font-size", "40px");
+                            text_size = "40px";
+                            break;
+                            default:
+
+                          }
+                        }
+                      });
+                      $('#writeEvent.ui.dropdown').dropdown({
+                        onChange: function(value){
+
+                          switch (value) {
+                            case "event_1": //event_1
+                            text_event = "event_1";
+                            break;
+                            case "event_2": //지진
+                            text_event = "event_2";
+                            break;
+                            case "event_3": //벌렁벌렁
+                            text_event = "event_3";
+                            break;
+                            default:
+
+                          }
+                        }
+                      });
+
+                      //이벤트 작동
+
+                      $(document).on("ready", ".event_2" , function(){
+                        alert("된다!!");
+                        $(this).transition("shake");
+                      });
+
+
+                      //$(".event_3").transition("flash");
+
                       </script>
                       </html>

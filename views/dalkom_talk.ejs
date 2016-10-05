@@ -28,7 +28,6 @@
 
       .talk.me {
         margin-right: 30px;
-        margin-bottom : 10px;
         border: 5px solid #ffec42;
         background-color: #ffec42; }
 
@@ -135,43 +134,54 @@
                         </style>
 
                         <script>
-                        var text_color = "black";
 
                         $(function(){
                           var MBox = document.getElementById("messages");
                           var socket = io.connect();
                           socket.on('my message', function (msg) {
-                            if(msg.content != "")
+                            if(msg != "")
                             {
-                              var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                              $('#messages').append($('<p class="talk me" style="color:' + msg.color + ';">').html(htmlMsg));
+                              var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                              $('#messages').append($('<p class="talk me">').html(htmlMsg));
                               MBox.scrollTop = MBox.scrollHeight;
                             }
                           });
                           socket.on('other message', function (msg) {
-                            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; padding-top:10px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other" style="color:' + msg.color + ';">'+ htmlMsg);
+                            var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ htmlMsg);
                             //$('#messages.ui.event.content').append($('<p class="talk other">').html(htmlMsg));
                             MBox.scrollTop = MBox.scrollHeight;
+
+
+                            // <div class="ui feed">
+                            //   <div class="event">
+                            //     <div class="label">
+                            //       <img src="/images/avatar/small/elliot.jpg">
+                            //     </div>
+                            //     <div class="content">
+                            //       You added Elliot Fu to the group <a>Coworkers</a>
+                            //     </div>
+                            //   </div>
+                            // </div>
                           });
 
                           $("#input").keyup(function(key){
                             if(key.keyCode==13){
                               if(key.ctrlKey){
+                                console.log("진입2");
+                                //$(this).value = msg = msg + "&#13;";
                                 var textVal = $("#input").val();
                                 textVal = textVal + "\n";
                                 $("#input").val(textVal);
                               }
                               else {
-                                var data_json = {"content" : $("#input").val(), "color" : text_color};
-                                socket.emit('message', data_json);
+                                socket.emit('message', $("#input").val());
                                 $("#input").val("");
                               }
                             }
                           });
                           $("#btn").on('click', function(){
-                            var data_json = {"content" : $("#input").val(), "color" : text_color};
-                            socket.emit('message', data_json);
+                            socket.emit('message', $("#input").val());
                             $("#input").val("");
                           });
                         })
@@ -183,66 +193,8 @@
                         <div class="background" >
                           <div class ="msgbox" id="messages">
                           </div>
-                          <textarea id="input" class="msg" type="text" style="color:black;"></textarea>
+                          <textarea id="input" class="msg" type="text"></textarea>
                           <button id="btn" class="send" type="button">전송</button>
                         </div>
-
-                        <!-- 쓰기 효과!!! -->
-                        <div id="writeColor" class="ui floating labeled icon dropdown button">
-                          <i class="filter icon"></i>
-                          <span class="text">검정</span>
-                          <div class="menu">
-                            <div class="item active selected" data-value="black">
-                              검정
-                            </div>
-                            <div class="item" style="color:red;" data-value="red">
-                              빨강
-                            </div>
-                            <div class="item" style="color:blue;" data-value="blue">
-                              파랑
-                            </div>
-                          </div>
-                        </div>
-                        <div id="writeEvent" class="ui floating labeled icon dropdown button">
-                          <i class="filter icon"></i>
-                          <span class="text">효과 없음</span>
-                          <div class="menu">
-                            <div class="item active selected" data-value="1">
-                              효과 없음
-                            </div>
-                            <div class="item" data-value="2">
-                              지진
-                            </div>
-                            <div class="item" data-value="3">
-                              벌렁벌렁
-                            </div>
-                          </div>
-                        </div>
                       </body>
-
-                      <script>
-                      $('.ui.dropdown').dropdown();
-
-                      $('#writeColor.ui.dropdown').dropdown({
-                        onChange: function(value){
-
-                          switch (value) {
-                            case "black": //블랙
-                              $('#input.msg').css("color", "black");
-                              text_color = "black";
-                            break;
-                            case "red": //레드
-                              $('#input.msg').css("color", "red");
-                              text_color = "red";
-                            break;
-                            case "blue": //블루
-                              $('#input.msg').css("color", "blue");
-                              text_color = "blue";
-                            break;
-                            default:
-
-                          }
-                        }
-                      });
-                      </script>
                       </html>

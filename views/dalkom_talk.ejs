@@ -136,12 +136,9 @@
                         </style>
 
                         <script>
-<<<<<<< HEAD
                         var text_color = "black";
                         var text_size = "15px";
                         var text_event = "event_1";
-=======
->>>>>>> origin/master
 
                         $(function(){
                           var MBox = document.getElementById("messages");
@@ -149,42 +146,22 @@
                           socket.on('my message', function (msg) {
                             if(msg != "")
                             {
-<<<<<<< HEAD
                               var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
                               $('#messages').append($('<p class="talk me ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
-=======
-                              var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                              $('#messages').append($('<p class="talk me">').html(htmlMsg));
->>>>>>> origin/master
+
                               MBox.scrollTop = MBox.scrollHeight;
                             }
                           });
                           socket.on('other message', function (msg) {
-<<<<<<< HEAD
                             if(msg.content != "")
                             {
                               var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
                               $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
                               MBox.scrollTop = MBox.scrollHeight;
                             }
-=======
                             var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
                             $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ htmlMsg);
-                            //$('#messages.ui.event.content').append($('<p class="talk other">').html(htmlMsg));
                             MBox.scrollTop = MBox.scrollHeight;
-
-
-                            // <div class="ui feed">
-                            //   <div class="event">
-                            //     <div class="label">
-                            //       <img src="/images/avatar/small/elliot.jpg">
-                            //     </div>
-                            //     <div class="content">
-                            //       You added Elliot Fu to the group <a>Coworkers</a>
-                            //     </div>
-                            //   </div>
-                            // </div>
->>>>>>> origin/master
                           });
 
                           $("#input").keyup(function(key){
@@ -197,23 +174,15 @@
                                 $("#input").val(textVal);
                               }
                               else {
-<<<<<<< HEAD
                                 var data_json = {"content" : $("#input").val(), "color" : text_color, "size" : text_size, "event" : text_event};
                                 socket.emit('message', data_json);
-=======
-                                socket.emit('message', $("#input").val());
->>>>>>> origin/master
                                 $("#input").val("");
                               }
                             }
                           });
                           $("#btn").on('click', function(){
-<<<<<<< HEAD
                             var data_json = {"content" : $("#input").val(), "color" : text_color, "size" : text_size, "event" : text_event};
                             socket.emit('message', data_json);
-=======
-                            socket.emit('message', $("#input").val());
->>>>>>> origin/master
                             $("#input").val("");
                           });
                         })
@@ -225,7 +194,6 @@
                         <div class="background" >
                           <div class ="msgbox" id="messages">
                           </div>
-<<<<<<< HEAD
                           <textarea id="input" class="msg" type="text" wrap="physical" style="color:black;"></textarea>
                           <button id="btn" class="send" type="button">전송</button>
                         </div>
@@ -353,10 +321,8 @@
                       //$(".event_3").transition("flash");
 
                       </script>
-=======
                           <textarea id="input" class="msg" type="text"></textarea>
                           <button id="btn" class="send" type="button">전송</button>
                         </div>
                       </body>
->>>>>>> origin/master
                       </html>

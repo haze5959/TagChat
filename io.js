@@ -5,10 +5,6 @@ module.exports = function(server){
     socket.on('message', function(msg){
       socket.emit('my message', msg);
       socket.broadcast.emit('other message', msg);
-      socket.on('message', function(msg){
-        console.log(msg);
-        socket.emit('my message', msg);
-        socket.broadcast.emit('other message', msg);
     });
   });
 

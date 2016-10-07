@@ -11,6 +11,10 @@
 
 
   <style media="screen">
+  .ui.feed{
+    margin : 0 0 !important;
+  }
+
   .talk {
     position: relative;
     padding: 15px;
@@ -28,8 +32,10 @@
 
       .talk.me {
         margin-right: 30px;
+        margin-bottom: 5px;
         border: 5px solid #ffec42;
-        background-color: #ffec42; }
+        background-color: #ffec42;
+      }
 
         .talk:before {
           content: "";
@@ -106,223 +112,257 @@
 
                     }
 
-                      .send {
-                        background-color: #ffec42;
-                        display: inline-block;
-                        margin-bottom: 0;
-                        font-weight: normal;
-                        text-align: center;
+                    .send {
+                      background-color: #ffec42;
+                      display: inline-block;
+                      margin-bottom: 0;
+                      font-weight: normal;
+                      text-align: center;
+                      vertical-align: middle;
+                      border: 0px solid transparent;
+                      height: 46px;
+                      padding: 6px 12px;
+                      font-size: 14px;
+                      line-height: 1.42857;
+                      border-top-right-radius: 4px;
+                      border-bottom-right-radius: 4px; }
+
+                      .msgbox {
+                        width: auto;
+                        height: 600px;
+                        overflow-y: scroll;
+                        overflow-x: hidden;
+                      }
+
+                      #input {
                         vertical-align: middle;
-                        border: 0px solid transparent;
-                        height: 46px;
-                        padding: 6px 12px;
-                        font-size: 14px;
-                        line-height: 1.42857;
-                        border-top-right-radius: 4px;
-                        border-bottom-right-radius: 4px; }
+                        resize: none;
+                      }
 
-                        .msgbox {
-                          width: auto;
-                          height: 600px;
-                          overflow-y: scroll;
-                          overflow-x: hidden;
-                        }
+                      </style>
 
-                        #input {
-                          vertical-align: middle;
-                          resize: none;
-                        }
+                      <script>
+                      var text_color = "black";
+                      var text_size = "15px";
+                      var text_event = "event_1";
 
-                        </style>
-
-                        <script>
-                        var text_color = "black";
-                        var text_size = "15px";
-                        var text_event = "event_1";
-
-                        $(function(){
-                          var MBox = document.getElementById("messages");
-                          var socket = io.connect();
-                          socket.on('my message', function (msg) {
-                            if(msg != "")
-                            {
-                              var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                              $('#messages').append($('<p class="talk me ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
-
-                              MBox.scrollTop = MBox.scrollHeight;
-                            }
-                          });
-                          socket.on('other message', function (msg) {
-                            if(msg.content != "")
-                            {
-                              var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                              $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
-                              MBox.scrollTop = MBox.scrollHeight;
-                            }
-                            var htmlMsg = msg.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ htmlMsg);
+                      $(function(){
+                        var MBox = document.getElementById("messages");
+                        var socket = io.connect();
+                        socket.on('my message', function (msg) {
+                          if(msg.content != "")
+                          {
+                            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                            $('#messages').append($('<p class="talk me ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
                             MBox.scrollTop = MBox.scrollHeight;
-                          });
+                          }
 
-                          $("#input").keyup(function(key){
-                            if(key.keyCode==13){
-                              if(key.ctrlKey){
-                                console.log("진입2");
-                                //$(this).value = msg = msg + "&#13;";
-                                var textVal = $("#input").val();
-                                textVal = textVal + "\n";
-                                $("#input").val(textVal);
-                              }
-                              else {
-                                var data_json = {"content" : $("#input").val(), "color" : text_color, "size" : text_size, "event" : text_event};
+                          //마지막 글에 효과가 걸려있으면 실행!
+                          if($('.talk').last().hasClass("event_1") != true){
+
+                            if($('.talk').last().hasClass("event_2")){  //지진
+                              $('.talk').last().transition("shake");
+                            }else if($('.talk').last().hasClass("event_3")){  //벌렁벌렁
+                              $('.talk').last().transition('pulse');
+                              $('.talk').last().transition('pulse');
+                            }else if($('.talk').last().hasClass("event_4")){  //찌글찌글
+                              $('.talk').last().transition('jiggle');
+                            }else if($('.talk').last().hasClass("event_5")){  //반짝반짝
+                              $('.talk').last().transition('flash');
+                            }else if($('.talk').last().hasClass("event_6")){  //흔들흔들
+                              $('.talk').last().transition('tada');
+                            }else if($('.talk').last().hasClass("event_7")){  //바운스
+                              $('.talk').last().transition('bounce');
+                            }
+                          }
+                        });
+                        socket.on('other message', function (msg) {
+                          if(msg.content != "")
+                          {
+                            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
+                            MBox.scrollTop = MBox.scrollHeight;
+                          }
+                        });
+
+                        $("#input").keyup(function(key){
+                          var textVal = $("#input").val();
+                          if(key.keyCode==13){
+                            if(key.ctrlKey){
+                              textVal = textVal + "\n";
+                              $("#input").val(textVal);
+                            }
+                            else {  //엔터키 눌렀을 때
+                              if(textVal.length > 1)
+                              {
+                                console.log("오규");
+                                var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
                                 socket.emit('message', data_json);
                                 $("#input").val("");
                               }
+                              else{
+                                $("#input").val("");
+                              }
                             }
-                          });
-                          $("#btn").on('click', function(){
-                            var data_json = {"content" : $("#input").val(), "color" : text_color, "size" : text_size, "event" : text_event};
+                          }
+                        });
+                        //전송 버튼 클릭했을 때
+                        $("#btn").on('click', function(){
+                          var textVal = $("#input").val();
+                          if(textVal != "")
+                          {
+                            var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
                             socket.emit('message', data_json);
                             $("#input").val("");
-                          });
-                        })
-
-                        </script>
-
-                      </head>
-                      <body>
-                        <div class="background" >
-                          <div class ="msgbox" id="messages">
-                          </div>
-                          <textarea id="input" class="msg" type="text" wrap="physical" style="color:black;"></textarea>
-                          <button id="btn" class="send" type="button">전송</button>
-                        </div>
-
-                        <!-- 쓰기 효과!!! -->
-                        <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
-                          <i class="filter icon"></i>
-                          <span class="text">검정</span>
-                          <div class="menu">
-                            <div class="item active selected" data-value="black">
-                              검정
-                            </div>
-                            <div class="item" style="color:red;" data-value="red">
-                              빨강
-                            </div>
-                            <div class="item" style="color:blue;" data-value="blue">
-                              파랑
-                            </div>
-                          </div>
-                        </div>
-                        <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
-                          <i class="filter icon"></i>
-                          <span class="text">15px</span>
-                          <div class="menu">
-                            <div class="item active selected" data-value="15px">
-                              15px
-                            </div>
-                            <div class="item" style="font-size:15px;" data-value="25px">
-                              25px
-                            </div>
-                            <div class="item" style="font-size:20px;" data-value="40px">
-                              40px
-                            </div>
-                          </div>
-                        </div>
-                        <div id="writeEvent" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
-                          <i class="filter icon"></i>
-                          <span class="text">효과 없음</span>
-                          <div class="menu">
-                            <div class="item active selected" data-value="event_1">
-                              효과 없음
-                            </div>
-                            <div class="item" data-value="event_2">
-                              지진
-                            </div>
-                            <div class="item" data-value="event_3">
-                              벌렁벌렁
-                            </div>
-                          </div>
-                        </div>
-                      </body>
-
-                      <script>
-                      $('.ui.dropdown').dropdown();
-
-                      $('#writeColor.ui.dropdown').dropdown({
-                        onChange: function(value){
-
-                          switch (value) {
-                            case "black": //블랙
-                            $('#input.msg').css("color", "black");
-                            text_color = "black";
-                            break;
-                            case "red": //레드
-                            $('#input.msg').css("color", "red");
-                            text_color = "red";
-                            break;
-                            case "blue": //블루
-                            $('#input.msg').css("color", "blue");
-                            text_color = "blue";
-                            break;
-                            default:
-
                           }
-                        }
-                      });
-                      $('#writeSize.ui.dropdown').dropdown({
-                        onChange: function(value){
-
-                          switch (value) {
-                            case "15px": //10
-                            $('#input.msg').css("font-size", "15px");
-                            text_size = "15px";
-                            break;
-                            case "25px": //15
-                            $('#input.msg').css("font-size", "25px");
-                            text_size = "25px";
-                            break;
-                            case "40px": //20px
-                            $('#input.msg').css("font-size", "40px");
-                            text_size = "40px";
-                            break;
-                            default:
-
-                          }
-                        }
-                      });
-                      $('#writeEvent.ui.dropdown').dropdown({
-                        onChange: function(value){
-
-                          switch (value) {
-                            case "event_1": //event_1
-                            text_event = "event_1";
-                            break;
-                            case "event_2": //지진
-                            text_event = "event_2";
-                            break;
-                            case "event_3": //벌렁벌렁
-                            text_event = "event_3";
-                            break;
-                            default:
-
-                          }
-                        }
-                      });
-
-                      //이벤트 작동
-
-                      $(document).on("ready", ".event_2" , function(){
-                        alert("된다!!");
-                        $(this).transition("shake");
-                      });
-
-
-                      //$(".event_3").transition("flash");
+                        });
+                      })
 
                       </script>
-                          <textarea id="input" class="msg" type="text"></textarea>
-                          <button id="btn" class="send" type="button">전송</button>
+
+                    </head>
+                    <body>
+                      <div class="background" >
+                        <div class ="msgbox" id="messages">
                         </div>
-                      </body>
-                      </html>
+                        <textarea id="input" class="msg" type="text" wrap="physical" style="color:black;"></textarea>
+                        <button id="btn" class="send" type="button">전송</button>
+                      </div>
+
+                      <!-- 쓰기 효과!!! -->
+                      <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+                        <i class="filter icon"></i>
+                        <span class="text">검정</span>
+                        <div class="menu">
+                          <div class="item active selected" data-value="black">
+                            검정
+                          </div>
+                          <div class="item" style="color:red;" data-value="red">
+                            빨강
+                          </div>
+                          <div class="item" style="color:blue;" data-value="blue">
+                            파랑
+                          </div>
+                        </div>
+                      </div>
+                      <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+                        <i class="filter icon"></i>
+                        <span class="text">15px</span>
+                        <div class="menu">
+                          <div class="item active selected" data-value="15px">
+                            15px
+                          </div>
+                          <div class="item" style="font-size:15px;" data-value="25px">
+                            25px
+                          </div>
+                          <div class="item" style="font-size:20px;" data-value="40px">
+                            40px
+                          </div>
+                        </div>
+                      </div>
+                      <div id="writeEvent" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+                        <i class="filter icon"></i>
+                        <span class="text">효과 없음</span>
+                        <div class="menu">
+                          <div class="item active selected" data-value="event_1">
+                            효과 없음
+                          </div>
+                          <div class="item" data-value="event_2">
+                            지진
+                          </div>
+                          <div class="item" data-value="event_3">
+                            벌렁벌렁
+                          </div>
+                          <div class="item" data-value="event_4">
+                            찌글찌글
+                          </div>
+                          <div class="item" data-value="event_5">
+                            반짝반짝
+                          </div>
+                          <div class="item" data-value="event_6">
+                            흔들흔들
+                          </div>
+                          <div class="item" data-value="event_7">
+                            바운스
+                          </div>
+                        </div>
+                      </div>
+                    </body>
+
+                    <script>
+                    $('.ui.dropdown').dropdown();
+
+                    $('#writeColor.ui.dropdown').dropdown({
+                      onChange: function(value){
+
+                        switch (value) {
+                          case "black": //블랙
+                          $('#input.msg').css("color", "black");
+                          text_color = "black";
+                          break;
+                          case "red": //레드
+                          $('#input.msg').css("color", "red");
+                          text_color = "red";
+                          break;
+                          case "blue": //블루
+                          $('#input.msg').css("color", "blue");
+                          text_color = "blue";
+                          break;
+                          default:
+
+                        }
+                      }
+                    });
+                    $('#writeSize.ui.dropdown').dropdown({
+                      onChange: function(value){
+
+                        switch (value) {
+                          case "15px": //10
+                          $('#input.msg').css("font-size", "15px");
+                          text_size = "15px";
+                          break;
+                          case "25px": //15
+                          $('#input.msg').css("font-size", "25px");
+                          text_size = "25px";
+                          break;
+                          case "40px": //20px
+                          $('#input.msg').css("font-size", "40px");
+                          text_size = "40px";
+                          break;
+                          default:
+
+                        }
+                      }
+                    });
+                    $('#writeEvent.ui.dropdown').dropdown({
+                      onChange: function(value){
+
+                        switch (value) {
+                          case "event_1": //event_1
+                          text_event = "event_1";
+                          break;
+                          case "event_2": //지진
+                          text_event = "event_2";
+                          break;
+                          case "event_3": //벌렁벌렁
+                          text_event = "event_3";
+                          break;
+                          case "event_4": //찌글찌글
+                          text_event = "event_4";
+                          break;
+                          case "event_5": //반짝반짝
+                          text_event = "event_5";
+                          break;
+                          case "event_6": //흔들흔들
+                          text_event = "event_6";
+                          break;
+                          case "event_7": //바운스
+                          text_event = "event_7";
+                          break;
+                          default:
+
+                        }
+                      }
+                    });
+                    </script>
+                    </html>

@@ -7,6 +7,7 @@
   <script src="js/jquery-3.1.0.min.js"></script>
   <script src="js/semantic.min.js"></script>
   <script src="js/socket.io.js"></script>
+  <script src="js/ajaxSubmit.js"></script>
   <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
 
 
@@ -37,83 +38,98 @@
         background-color: #ffec42;
       }
 
-        .talk:before {
+      .talk:before {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        left: 40px;
+        border-width: 20px 20px 0;
+        border-style: solid;
+        border-color: #5a8f00 transparent;
+        /* reduce the damage in FF3.0 */
+        display: block;
+        width: 0; }
+
+        /* creates the smaller  triangle */
+        .talk:after {
           content: "";
           position: absolute;
-          bottom: -20px;
-          left: 40px;
-          border-width: 20px 20px 0;
+          bottom: -13px;
+          left: 47px;
+          border-width: 13px 13px 0;
           border-style: solid;
-          border-color: #5a8f00 transparent;
+          border-color: #fff transparent;
           /* reduce the damage in FF3.0 */
           display: block;
           width: 0; }
 
-          /* creates the smaller  triangle */
-          .talk:after {
-            content: "";
-            position: absolute;
-            bottom: -13px;
-            left: 47px;
-            border-width: 13px 13px 0;
-            border-style: solid;
-            border-color: #fff transparent;
-            /* reduce the damage in FF3.0 */
-            display: block;
-            width: 0; }
+          /* creates the larger triangle */
+          .talk.other:before {
+            top: 10px;
+            bottom: auto;
+            left: -30px;
+            border-width: 15px 30px 15px 0;
+            border-color: transparent #B0BEC5; }
 
-            /* creates the larger triangle */
-            .talk.other:before {
-              top: 10px;
+            /* creates the smaller  triangle */
+            .talk.other:after {
+              top: 16px;
               bottom: auto;
-              left: -30px;
-              border-width: 15px 30px 15px 0;
+              left: -21px;
+              border-width: 9px 21px 9px 0;
               border-color: transparent #B0BEC5; }
 
-              /* creates the smaller  triangle */
-              .talk.other:after {
-                top: 16px;
+              .talk.me:before {
+                top: 10px;
+                /* controls vertical position */
                 bottom: auto;
-                left: -21px;
-                border-width: 9px 21px 9px 0;
-                border-color: transparent #B0BEC5; }
+                left: auto;
+                right: -30px;
+                /* value = - border-left-width - border-right-width */
+                border-width: 15px 0 15px 30px;
+                border-color: transparent #ffec42; }
 
-                .talk.me:before {
-                  top: 10px;
-                  /* controls vertical position */
+                .talk.me:after {
+                  top: 16px;
                   bottom: auto;
                   left: auto;
-                  right: -30px;
-                  /* value = - border-left-width - border-right-width */
-                  border-width: 15px 0 15px 30px;
+                  right: -21px;
+                  border-width: 9px 0 9px 21px;
                   border-color: transparent #ffec42; }
 
-                  .talk.me:after {
-                    top: 16px;
-                    bottom: auto;
-                    left: auto;
-                    right: -21px;
-                    border-width: 9px 0 9px 21px;
-                    border-color: transparent #ffec42; }
+                  .msg {
+                    display: inline-block;
+                    height: 46px;
+                    width: 600px;
+                    padding: 6px 12px;
+                    font-size: 14px;
+                    line-height: 1.42857;
+                    color: #555555;
+                    background-color: #fff;
+                    background-image: none;
+                    border: 0px solid #ccc;
+                    border-top-left-radius: 4px;
+                    border-bottom-left-radius: 4px;
 
-                    .msg {
-                      display: inline-block;
-                      height: 46px;
-                      width: 600px;
-                      padding: 6px 12px;
-                      font-size: 14px;
-                      line-height: 1.42857;
-                      color: #555555;
-                      background-color: #fff;
-                      background-image: none;
-                      border: 0px solid #ccc;
-                      border-top-left-radius: 4px;
-                      border-bottom-left-radius: 4px;
+                  }
 
-                    }
+                  .send {
+                    background-color: #ffec42;
+                    display: inline-block;
+                    margin-bottom: 0;
+                    font-weight: normal;
+                    text-align: center;
+                    vertical-align: middle;
+                    border: 0px solid transparent;
+                    height: 46px;
+                    padding: 6px 12px;
+                    font-size: 14px;
+                    line-height: 1.42857;
+                    border-top-right-radius: 4px;
+                    border-bottom-right-radius: 4px; }
 
-                    .send {
-                      background-color: #ffec42;
+                    .fileSend {
+                      background-color: #808080;
                       display: inline-block;
                       margin-bottom: 0;
                       font-weight: normal;
@@ -127,21 +143,6 @@
                       border-top-right-radius: 4px;
                       border-bottom-right-radius: 4px; }
 
-                      .fileSend {
-                        background-color: #808080;
-                        display: inline-block;
-                        margin-bottom: 0;
-                        font-weight: normal;
-                        text-align: center;
-                        vertical-align: middle;
-                        border: 0px solid transparent;
-                        height: 46px;
-                        padding: 6px 12px;
-                        font-size: 14px;
-                        line-height: 1.42857;
-                        border-top-right-radius: 4px;
-                        border-bottom-right-radius: 4px; }
-
                       .msgbox {
                         width: auto;
                         height: 600px;
@@ -152,6 +153,39 @@
                       #input {
                         vertical-align: middle;
                         resize: none;
+                      }
+
+                      .filebox {display:inline-block; margin-right: 10px;}
+
+                      .filebox label {
+                        display: inline-block;
+                        padding: .5em .75em;
+                        color: #999;
+                        font-size: inherit;
+                        line-height: normal;
+                        vertical-align: middle;
+                        background-color: #fdfdfd;
+                        cursor: pointer;
+                        border: 1px solid #ebebeb;
+                        border-bottom-color: #e2e2e2;
+                        border-radius: .25em;
+                      }
+
+                      .filebox input[type="file"] {  /* 파일 필드 숨기기 */
+                        position: absolute;
+                        width: 1px;
+                        height: 1px;
+                        padding: 0;
+                        margin: -1px;
+                        overflow: hidden;
+                        clip:rect(0,0,0,0);
+                        border: 0;
+                      }
+                      
+                      .filebox.bs3-primary label {
+                        color: #fff;
+                        background-color: #337ab7;
+                        border-color: #2e6da4;
                       }
 
                       </style>
@@ -210,7 +244,6 @@
                             else {  //엔터키 눌렀을 때
                               if(textVal.length > 1)
                               {
-                                console.log("오규");
                                 var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
                                 socket.emit('message', data_json);
                                 $("#input").val("");
@@ -231,11 +264,6 @@
                             $("#input").val("");
                           }
                         });
-
-                        //파일 올리기 버튼
-                        $("#btnFile").on('click', function(){
-                          console.log("dsfsf");
-                        });
                       })
 
                       </script>
@@ -247,11 +275,6 @@
                         </div>
                         <textarea id="input" class="msg" type="text" wrap="physical" style="color:black;"></textarea>
                         <button id="btn" class="send" type="button">&nbsp;&nbsp;&nbsp;&nbsp;전&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;송&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                        <input id="btnFile" class="fileSend" type="file" multiple="multiple">파일 전송</input>
-                        <div class="ui icon big button">
-        <i class="cloud icon"></i>
-        <input type="file" id="hidde-new-file" multiple="multiple">
- </div>
                       </div>
 
                       <!-- 쓰기 효과!!! -->
@@ -330,6 +353,16 @@
                           </div>
                         </div>
                       </div>
+
+                      <!-- 파일전송 -->
+                      <form action="/upload" method="post" enctype="multipart/form-data" style="display: inline-block;" id="fileForm">
+                        <div class="filebox">
+                          <label for="ex_file">업로드</label>
+                          <input type="file" name="chatOneOne" id="ex_file">
+                        </div>
+                        <input type="submit" value="Upload" id="submitFile">
+                      </form>
+                      <div class="ui active inline loader" style="display: none;" id="fileLoader"></div>
                     </body>
 
                     <script>
@@ -431,5 +464,55 @@
                         }
                       }
                     });
+
+                    //파일 올리기
+                    var options = {
+                      beforeSubmit : "",
+                      success      : "",
+                      dataType     : 'json'
+                    };
+
+                    $(function(){
+
+                      $("#submitFile").click(function(e){
+                        e.preventDefault();
+                        apply();
+                        return false;
+                      });
+
+                    });
+
+                    function apply()
+                    {
+                      // ajaxSubmit Option
+                      options = {
+                        beforeSubmit : applyBefore, // ajaxSubmit 전처리 함수
+                        success      : applyAfter,  // ajaxSubmit 후처리 함수
+                        error        : errorMessage,
+                        //dataType     : 'json'       // 데이터 타입 json
+                      };
+                      // frmApply Form Data값을 testAjax.html 으로 ajax 전송
+                      $("#fileForm").ajaxSubmit(options);
+                    }
+
+                    function applyBefore(formData, jqForm, options)
+                    {
+                      // ajaxSubmit 전 처리 작업 영역
+                      $("#fileLoader").css("display", "inline-block");
+                      //console.log("전처리~" + JSON.stringify(formData) + "전처리~" + JSON.stringify(jqForm) + "전처리~" + JSON.stringify(options));
+                      return true;
+                    }
+
+                    function applyAfter(response)
+                    {
+                      console.log("후처리 성공~" + response );
+                      $("#fileLoader").css("display", "none");
+                    }
+
+                    function errorMessage(xhr)
+                    {
+                      console.log("에러다~" + JSON.stringify(xhr) );
+                    }
+
                     </script>
                     </html>

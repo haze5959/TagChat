@@ -5,8 +5,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log("get 들어왔다");
-
+  
   if(req.query.tagName  == "1:1")
   {
     res.render('oneoneChat', { title: '1:1 채팅방' });
@@ -20,11 +19,13 @@ router.get('/', function(req, res, next) {
 
 //파일 업로드 테스트
 router.post('/upload', function(req, res, next) {
-  uploadFile(req, res).then(function (file) {
-    res.json(file);
-  }, function (err) {
-    res.send(500, err);
-  });
+  uploadFile(req,res,function(err) {
+        if(err) {
+          console.log("에러다 - " + err);
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+    });
 });
 
 

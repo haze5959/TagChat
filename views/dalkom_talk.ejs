@@ -160,15 +160,16 @@
                       .filebox label {
                         display: inline-block;
                         padding: .5em .75em;
-                        color: #999;
+                        color: #fff;
                         font-size: inherit;
                         line-height: normal;
                         vertical-align: middle;
-                        background-color: #fdfdfd;
+                        background-color: #337ab7;
                         cursor: pointer;
                         border: 1px solid #ebebeb;
                         border-bottom-color: #e2e2e2;
                         border-radius: .25em;
+                        border-color: #2e6da4;
                       }
 
                       .filebox input[type="file"] {  /* 파일 필드 숨기기 */
@@ -180,12 +181,6 @@
                         overflow: hidden;
                         clip:rect(0,0,0,0);
                         border: 0;
-                      }
-                      
-                      .filebox.bs3-primary label {
-                        color: #fff;
-                        background-color: #337ab7;
-                        border-color: #2e6da4;
                       }
 
                       </style>
@@ -360,7 +355,7 @@
                           <label for="ex_file">업로드</label>
                           <input type="file" name="chatOneOne" id="ex_file">
                         </div>
-                        <input type="submit" value="Upload" id="submitFile">
+                        <input type="submit" value="Upload" id="submitFile" style="display:none;">
                       </form>
                       <div class="ui active inline loader" style="display: none;" id="fileLoader"></div>
                     </body>
@@ -465,12 +460,34 @@
                       }
                     });
 
+                    //파일 체크
+                    function checkTitleFileType(obj){
+
+                      pathpoint = obj.lastIndexOf('.');
+                      filepoint = obj.substring(pathpoint+1,obj.length);
+                      filetype = filepoint.toLowerCase();
+                      if (filetype == 'gif'|| filetype == 'jpg' || filetype == 'jpeg'){
+
+                        return true;
+                      }else{
+
+                        alert("파일 확장자는 gif, jpg, jpeg만 가능합니다." );
+                        return false;
+                      }
+                    }
+
                     //파일 올리기
-                    var options = {
-                      beforeSubmit : "",
-                      success      : "",
-                      dataType     : 'json'
-                    };
+                    $("#ex_file").change(function(){
+                      var fileType = $(this).val();
+                      // var size = $(this).files[0].size;
+                      // console.log(size);
+
+                      if(checkTitleFileType(fileType)){
+                        $("#submitFile").trigger('click');
+                      }
+
+                      $(this).val(null)
+                    });
 
                     $(function(){
 
@@ -485,11 +502,10 @@
                     function apply()
                     {
                       // ajaxSubmit Option
-                      options = {
+                      var options = {
                         beforeSubmit : applyBefore, // ajaxSubmit 전처리 함수
                         success      : applyAfter,  // ajaxSubmit 후처리 함수
-                        error        : errorMessage,
-                        //dataType     : 'json'       // 데이터 타입 json
+                        error        : errorMessage
                       };
                       // frmApply Form Data값을 testAjax.html 으로 ajax 전송
                       $("#fileForm").ajaxSubmit(options);
@@ -505,7 +521,7 @@
 
                     function applyAfter(response)
                     {
-                      console.log("후처리 성공~" + response );
+                      console.log("후처리 성공~" + JSON.stringify(response) );
                       $("#fileLoader").css("display", "none");
                     }
 

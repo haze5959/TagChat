@@ -2,6 +2,7 @@
 var multer = require('multer');
 
 var storage =   multer.diskStorage({
+
   destination: function (req, file, callback) {
     callback(null, './uploads');
   },
@@ -9,12 +10,14 @@ var storage =   multer.diskStorage({
 
     file.uploadedFile = {
             name: req.params.filename,
-            ext: file.mimetype.split('/')[1]
+            type: file.mimetype.split('/')[0]
           };
 
     callback(null, Date.now()  + '-' + file.originalname);
+
   }
 });
 
 var uploadFile = multer({ storage : storage}).single('chatOneOne');
+
 module.exports = uploadFile;

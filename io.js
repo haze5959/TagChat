@@ -6,6 +6,11 @@ module.exports = function(server){
       socket.emit('my message', msg);
       socket.broadcast.emit('other message', msg);
     });
+
+    socket.on('ImgMessage', function(Img_Path){
+      socket.emit('my ImgMessage', Img_Path);
+      socket.broadcast.emit('other ImgMessage', Img_Path);
+    });
   });
 
   return io;

@@ -185,101 +185,6 @@
 
                       </style>
 
-                      <!-- <script>
-                      var text_color = "black";
-                      var text_size = "15px";
-                      var text_event = "event_1";
-
-                      $(function(){
-                        var MBox = document.getElementById("messages");
-                        var socket = io.connect();
-                        socket.on('my message', function (msg) {
-                          if(msg.content != "")
-                          {
-                            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                            $('#messages').append($('<p class="talk me ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
-                            MBox.scrollTop = MBox.scrollHeight;
-                          }
-
-                          //마지막 글에 효과가 걸려있으면 실행!
-                          if($('.talk').last().hasClass("event_1") != true){
-
-                            if($('.talk').last().hasClass("event_2")){  //지진
-                              $('.talk').last().transition("shake");
-                            }else if($('.talk').last().hasClass("event_3")){  //벌렁벌렁
-                              $('.talk').last().transition('pulse');
-                              $('.talk').last().transition('pulse');
-                            }else if($('.talk').last().hasClass("event_4")){  //찌글찌글
-                              $('.talk').last().transition('jiggle');
-                            }else if($('.talk').last().hasClass("event_5")){  //반짝반짝
-                              $('.talk').last().transition('flash');
-                            }else if($('.talk').last().hasClass("event_6")){  //흔들흔들
-                              $('.talk').last().transition('tada');
-                            }else if($('.talk').last().hasClass("event_7")){  //바운스
-                              $('.talk').last().transition('bounce');
-                            }
-                          }
-                        });
-                        socket.on('other message', function (msg) {
-                          if(msg.content != "")
-                          {
-                            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
-                            MBox.scrollTop = MBox.scrollHeight;
-                          }
-                        });
-                        //사진 올리기
-                        socket.on('my ImgMessage', function (Img_Path) {
-
-                          $('#messages').append($('<p class="talk me ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">').html("<img class='ui medium rounded image' src='" + Img_Path + "'>"));
-                        });
-
-                        socket.on('other ImgMessage', function (Img_Path) {
-
-                            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other ' + msg.event + '" style="color:' + msg.color + '; font-size:' + msg.size + ';">'+ "<img class='ui medium rounded image' src='" + Img_Path + "'>");
-                            MBox.scrollTop = MBox.scrollHeight;
-                        });
-
-                        $("#input").keyup(function(key){
-                          var textVal = $("#input").val();
-                          if(key.keyCode==13){
-                            if(key.ctrlKey){
-                              textVal = textVal + "\n";
-                              $("#input").val(textVal);
-                            }
-                            else {  //엔터키 눌렀을 때
-                              if(textVal.length > 1)
-                              {
-                                var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
-                                socket.emit('message', data_json);
-                                $("#input").val("");
-                              }
-                              else{
-                                $("#input").val("");
-                              }
-                            }
-                          }
-                        });
-                        //전송 버튼 클릭했을 때
-                        $("#btn").on('click', function(){
-                          var textVal = $("#input").val();
-                          if(textVal != "")
-                          {
-                            var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
-                            socket.emit('message', data_json);
-                            $("#input").val("");
-                          }
-                        });
-
-
-                        //이미지 뿅뿅!~~
-                        function emitImg(Img_Path){
-                          socket.emit('ImgMessage', Img_Path);
-                        }
-                      })
-
-                      </script> -->
-
                     </head>
                     <body>
                       <div class="background" >
@@ -422,7 +327,7 @@
                           tempString += "/" + strArray[i];
                         }
 
-                        $('#messages').append($('<p class="talk me">').html("<img class='ui medium rounded image' src='" + tempString + "'>"));
+                        $('#messages').append($('<p class="talk me">').html("<img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')>"));
                       });
 
                       socket.on('other ImgMessage', function (Img_Path) {
@@ -434,7 +339,7 @@
                           tempString += "/" + strArray[i];
                         }
 
-                          $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ "<img class='ui medium rounded image' src='" + tempString + "'>");
+                          $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ "<img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')>");
                           MBox.scrollTop = MBox.scrollHeight;
                       });
 
@@ -692,98 +597,34 @@
                       }
                     });
 
-                    // //파일 체크
-                    // function checkTitleFileType(obj){
-                    //
-                    //   pathpoint = obj.lastIndexOf('.');
-                    //   filepoint = obj.substring(pathpoint+1,obj.length);
-                    //   filetype = filepoint.toLowerCase();
-                    //   if (filetype == 'gif'|| filetype == 'jpg' || filetype == 'jpeg'){
-                    //
-                    //     return true;
-                    //   }else{
-                    //
-                    //     alert("파일 확장자는 gif, jpg, jpeg만 가능합니다." );
-                    //     return false;
-                    //   }
-                    // }
-                    //
-                    // //파일 올리기
-                    // $("#ex_file").change(function(){
-                    //   var fileType = $(this).val();
-                    //   var file = document.getElementById("fileForm").chatOneOne;
-                    //
-                    //   // 사이즈체크
-                    //   var maxSize  = 5 * 1024 * 1024    //5MB
-                    //   var fileSize = 0;
-                    //
-                    //   // 브라우저 확인
-                    //   var browser=navigator.appName;
-                    //
-                    //   // 익스플로러일 경우
-                    //   if (browser=="Microsoft Internet Explorer")
-                    //   {
-                    //     var oas = new ActiveXObject("Scripting.FileSystemObject");
-                    //     fileSize = oas.getFile( file.value ).size;
-                    //   }
-                    //   // 익스플로러가 아닐경우
-                    //   else
-                    //   {
-                    //     fileSize = file.files[0].size;
-                    //   }
-                    //
-                    //   if(fileSize > maxSize)
-                    //   {
-                    //       alert("첨부파일 사이즈는 5MB 이내로 등록 가능합니다.    ");
-                    //       return;
-                    //   }
-                    //
-                    //   if(checkTitleFileType(fileType)){
-                    //     console.log("데이터 진입");
-                    //     $("#submitFile").trigger('click');
-                    //   }
-                    //
-                    //   $(this).val(null)
-                    // });
-                    //
-                    // $("#submitFile").click(function(e){
-                    //   e.preventDefault();
-                    //   apply();
-                    //   return false;
-                    // });
-                    //
-                    //
-                    // function apply()
-                    // {
-                    //   // ajaxSubmit Option
-                    //   var options = {
-                    //     beforeSubmit : applyBefore, // ajaxSubmit 전처리 함수
-                    //     success      : applyAfter,  // ajaxSubmit 후처리 함수
-                    //     error        : errorMessage
-                    //   };
-                    //   // frmApply Form Data값을 testAjax.html 으로 ajax 전송
-                    //   $("#fileForm").ajaxSubmit(options);
-                    // }
-                    //
-                    // function applyBefore(formData, jqForm, options)
-                    // {
-                    //   // ajaxSubmit 전 처리 작업 영역
-                    //   $("#fileLoader").css("display", "inline-block");
-                    //   return true;
-                    // }
-                    //
-                    // function applyAfter(response)
-                    // {
-                    //   console.log("후처리 성공~" + response );
-                    //   $("#fileLoader").css("display", "none");
-                    //   //소켓 에밋
-                    //   emitImg(response);
-                    // }
-                    //
-                    // function errorMessage(xhr)
-                    // {
-                    //   console.log("에러다~" + JSON.stringify(xhr) );
-                    // }
+                    // 이미지 클릭시 원본 크기로 팝업 보기
+                    function doImgPop(img){
+                     img1= new Image();
+                     img1.src=(img);
+                     imgControll(img);
+                    }
+
+                    function imgControll(img){
+                     if((img1.width!=0)&&(img1.height!=0)){
+                        viewImage(img);
+                      }
+                      else{
+                         controller="imgControll('"+img+"')";
+                         intervalID=setTimeout(controller,20);
+                      }
+                    }
+
+                    function viewImage(img){
+                     W=img1.width;
+                     H=img1.height;
+                     O="width="+W+",height="+H+",scrollbars=yes";
+                     imgWin=window.open("","",O);
+                     imgWin.document.write("<html><head><title>원본크기 이미지</title></head>");
+                     imgWin.document.write("<body topmargin=0 leftmargin=0>");
+                     imgWin.document.write("<img src="+img+" onclick='self.close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+                     imgWin.document.close();
+                    }
+
 
                     </script>
-                    </html>
+          </html>

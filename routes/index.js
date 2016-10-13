@@ -1,7 +1,6 @@
 var uploadFile = require('./uploadFile');
 var express = require('express');
 var router = express.Router();
-//var fs = require('fs');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,6 +18,8 @@ router.get('/', function(req, res, next) {
 
 //파일 업로드 테스트
 router.post('/upload', function(req, res, next) {
+
+  //파일 업로드
   uploadFile(req,res,function(err) {
         if(err) {
           console.log("에러다 - " + err);

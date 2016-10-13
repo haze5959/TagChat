@@ -13,6 +13,9 @@ var multer  = require('multer');
 
 var app = express();
 
+//전역변수
+global.uploadFoler = null;
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

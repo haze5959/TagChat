@@ -1,7 +1,7 @@
 //파일 업로드를 위한 js
 var multer = require('multer');
-var fs = require('fs');
 var dateFormat = require('dateformat');
+var fs = require('fs');
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -9,22 +9,14 @@ var storage =   multer.diskStorage({
     var now = new Date();
     var filePath = "./public/uploads";
     now = dateFormat(now, "yyyy-mmmm-dS");
-    filePath = filePath + "/" + now;
+    global.uploadFoler = filePath + "/" + now;
 
-    var temp = fs.readdirSync(filePath, function (err, files)  {
-      if(!err){ //에러가 없다면
-        //폴더가 이미 존재하므로 아무것도 안하고 패스~
-      }else{
-        fs.mkdir(filePath, '0777', function(err2){
-        	if(err2){
-            console.log("폴더가 안만들어 짐");
-          }
-        	console.log('dir writed - ' + filePath);
-        });
-      }
-    });
+    if (!fs.existsSync(global.uploadFoler)){
+        fs.mkdirSync(global.uploadFoler);
+        console.log('dir writed - ' + global.uploadFoler);
+    }
 
-    callback(null, filePath);
+    callback(null, global.uploadFoler);
   },
   filename: function (req, file, callback) {
 

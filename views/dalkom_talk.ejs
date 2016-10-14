@@ -9,8 +9,6 @@
   <script src="js/socket.io.js"></script>
   <script src="js/ajaxSubmit.js"></script>
   <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
-
-
   <style media="screen">
   .ui.feed{
     margin : 0 0 !important;
@@ -183,6 +181,14 @@
                         border: 0;
                       }
 
+                      .chat_in{
+
+                      }
+
+                      .chat_out{
+
+                      }
+
                       </style>
 
                     </head>
@@ -196,7 +202,7 @@
 
                       <!-- 쓰기 효과!!! -->
                       <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
-                        <i class="filter icon"></i>
+                        <i class="paint brush icon"></i>
                         <span class="text">검정</span>
                         <div class="menu">
                           <div class="item active selected" data-value="black">
@@ -229,7 +235,7 @@
                         </div>
                       </div>
                       <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
-                        <i class="filter icon"></i>
+                        <i class="font icon"></i>
                         <span class="text">15px</span>
                         <div class="menu">
                           <div class="item active selected" data-value="15px">
@@ -244,7 +250,7 @@
                         </div>
                       </div>
                       <div id="writeEvent" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
-                        <i class="filter icon"></i>
+                        <i class="star icon"></i>
                         <span class="text">효과 없음</span>
                         <div class="menu">
                           <div class="item active selected" data-value="event_1">
@@ -293,6 +299,25 @@
                     $(function(){
                       var MBox = document.getElementById("messages");
                       var socket = io.connect();
+
+                      //최초 접속 했을 때
+                      socket.emit('talk chat_in', "(나중 세션으로 넣어)님이 접속하였습니다.");
+
+                      //최초 접속
+                      socket.on('talk chat_in', function (msg) {
+                          $('#messages').append($('<p align="center" class="chat_in" style="display: none">').text(msg));
+                          $('.chat_in').last().transition('fly right');
+                          MBox.scrollTop = MBox.scrollHeight;
+                      });
+
+                      //나갔을 때
+                      socket.on('talk chat_out', function () {
+                          var outText = "(나중 세션으로 넣어)님이 퇴장하였습니다.";
+                          $('#messages').append($('<p align="center" class="chat_out" style="display: none">').text(outText));
+                          $('.chat_out').last().transition('fly left');
+                          MBox.scrollTop = MBox.scrollHeight;
+                      });
+
                       socket.on('my message', function (msg) {
                         if(msg.content != "")
                         {
@@ -327,20 +352,19 @@
                           tempString += "/" + strArray[i];
                         }
 
-                        $('#messages').append($('<p class="talk me">').html("<img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')>"));
+                        $('#messages').append($('<p class="talk me" style="padding:0;">').html("<center><img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')></center>"));
+                        MBox.scrollTop = MBox.scrollHeight;
                       });
 
                       socket.on('other ImgMessage', function (Img_Path) {
                         var strArray = Img_Path.split('\\');
                         var tempString = "";
-                        console.log(strArray[0]);
-
                         for(var i = 1; i < strArray.length; i++){
                           tempString += "/" + strArray[i];
                         }
 
-                          $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other">'+ "<img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')>");
-                          MBox.scrollTop = MBox.scrollHeight;
+                        $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other" style="padding:0;"><img style="margin-left:auto; margin-right: auto;" class="ui medium rounded image" src="' + tempString + '" onclick=doImgPop("' + tempString + '")>');
+                        MBox.scrollTop = MBox.scrollHeight;
                       });
 
                       $("#input").keyup(function(key){
@@ -363,6 +387,7 @@
                           }
                         }
                       });
+
                       //전송 버튼 클릭했을 때
                       $("#btn").on('click', function(){
                         var textVal = $("#input").val();
@@ -422,7 +447,7 @@
                         var file = document.getElementById("fileForm").chatOneOne;
 
                         // 사이즈체크
-                        var maxSize  = 5 * 1024 * 1024    //5MB
+                        var maxSize  = 3 * 1024 * 1024    //3MB
                         var fileSize = 0;
 
                         // 브라우저 확인
@@ -442,8 +467,8 @@
 
                         if(fileSize > maxSize)
                         {
-                            alert("첨부파일 사이즈는 5MB 이내로 등록 가능합니다.    ");
-                            return;
+                          alert("첨부파일 사이즈는 3MB 이내로 등록 가능합니다.    ");
+                          return;
                         }
 
                         if(checkTitleFileType(fileType)){
@@ -599,32 +624,32 @@
 
                     // 이미지 클릭시 원본 크기로 팝업 보기
                     function doImgPop(img){
-                     img1= new Image();
-                     img1.src=(img);
-                     imgControll(img);
+                      img1= new Image();
+                      img1.src=(img);
+                      imgControll(img);
                     }
 
                     function imgControll(img){
-                     if((img1.width!=0)&&(img1.height!=0)){
+                      if((img1.width!=0)&&(img1.height!=0)){
                         viewImage(img);
                       }
                       else{
-                         controller="imgControll('"+img+"')";
-                         intervalID=setTimeout(controller,20);
+                        controller="imgControll('"+img+"')";
+                        intervalID=setTimeout(controller,20);
                       }
                     }
 
                     function viewImage(img){
-                     W=img1.width;
-                     H=img1.height;
-                     O="width="+W+",height="+H+",scrollbars=yes";
-                     imgWin=window.open("","",O);
-                     imgWin.document.write("<html><head><title>원본크기 이미지</title></head>");
-                     imgWin.document.write("<body topmargin=0 leftmargin=0>");
-                     imgWin.document.write("<img src="+img+" onclick='self.close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
-                     imgWin.document.close();
+                      W=img1.width;
+                      H=img1.height;
+                      O="width="+W+",height="+H+",scrollbars=yes";
+                      imgWin=window.open("","",O);
+                      imgWin.document.write("<html><head><title>원본크기 이미지</title></head>");
+                      imgWin.document.write("<body topmargin=0 leftmargin=0>");
+                      imgWin.document.write("<img src="+img+" onclick='self.close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+                      imgWin.document.close();
                     }
 
 
                     </script>
-          </html>
+                    </html>

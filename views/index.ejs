@@ -74,8 +74,11 @@
         <div class="tagCircle" style="  margin: 2em 0em 0em 60em; width: 10em; height: 10em;  line-height: 10em; font-size: 0.5em;" data-content="나오나요????" data-position="left center" value="1">
           커몬커몬
         </div>
-        <div class="tagCircle" style="  margin: 6em 0em 0em 20em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center" value="1:1">
-          1 : 1 채팅
+        <div class="tagCircle" style="  margin: 6em 0em 0em 20em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center" value="smallChat">
+          소수 채팅
+        </div>
+        <div class="tagCircle" style="  margin: 6em 0em 0em 60em; width: 15em; height: 15em;  line-height: 15em; font-size: 1em;" data-content="나오나요????2" data-position="left center" value="bigChat">
+          다인 채팅
         </div>
       </div>
     </div>
@@ -138,11 +141,15 @@ $(".drawer-toggle i").click(
         $('#all').transition('scale');
 
         var val = $(this).attr('value');
-        //alert(val);
-        if(val == "1:1")
+        if(val == "smallChat")
         {
-          $("#tagNameVal").attr('value', '1:1');
-          //1:1 채팅방 생성
+          $("#tagNameVal").attr('value', 'smallChat');
+          //소수 채팅방 생성
+          $("#tagNameForm").submit();
+        }else if(val == "bigChat")
+        {
+          $("#tagNameVal").attr('value', 'bigChat');
+          //소수 채팅방 생성
           $("#tagNameForm").submit();
         }
         //에이젝스로 값을 가져와서 다시 테그서클을 추가시켜주자

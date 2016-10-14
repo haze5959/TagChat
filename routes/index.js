@@ -5,9 +5,12 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  if(req.query.tagName  == "1:1")
+  if(req.query.tagName  == "smallChat")
   {
-    res.render('oneoneChat', { title: '1:1 채팅방' });
+    res.render('Chatframe', { title: '소수 채팅방', chat_width: '800px', chat_src: '/smallChat'});
+  }else if(req.query.tagName  == "bigChat")
+  {
+    res.render('Chatframe', { title: '다인 채팅방', chat_width: '1000px', chat_src: '/bigChat'});
   }
   else
   {
@@ -31,9 +34,14 @@ router.post('/upload', function(req, res, next) {
 });
 
 
-//임시 채팅방 테스트
-router.get('/test', function(req, res, next) {
-  res.render('dalkom_talk', { title: '1:1 채팅방' });
+//소수 채팅방
+router.get('/smallChat', function(req, res, next) {
+  res.render('small_talk');
+});
+
+//다인 채팅방
+router.get('/bigChat', function(req, res, next) {
+  res.render('big_talk');
 });
 
 

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no" />
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <script src="js/socket.io.js"></script>
+  <script src="js/ajaxSubmit.js"></script>
+  <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
+  <style media="screen">
+  .ui.feed{
+    margin : 0 0 !important;
+  }
+
+  .talk {
+    position: relative;
+    padding: 15px;
+    margin: 10px 0 10px;
+    color: black;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    width: 400px;
+  }
+
+    .msg {
+      display: inline-block;
+      height: 46px;
+      width: 600px;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 1.42857;
+      color: #555555;
+      background-color: #fff;
+      background-image: none;
+      border: 0px solid #ccc;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+
+    }
+
+    .send {
+      background-color: #ffec42;
+      display: inline-block;
+      margin-bottom: 0;
+      font-weight: normal;
+      text-align: center;
+      vertical-align: middle;
+      border: 0px solid transparent;
+      height: 46px;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 1.42857;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px; }
+
+      .fileSend {
+        background-color: #808080;
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: normal;
+        text-align: center;
+        vertical-align: middle;
+        border: 0px solid transparent;
+        height: 46px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px; }
+
+        .msgbox {
+          float: left;;
+          width: 800px;
+          height: 600px;
+        }
+
+        .userbox {
+          float: right;
+          width: auto;
+          height: 600px;
+          overflow-y: scroll;
+          overflow-x: hidden;
+        }
+
+        #input {
+          vertical-align: middle;
+          resize: none;
+        }
+
+        .filebox {display:inline-block; margin-right: 10px;}
+
+        .filebox label {
+          display: inline-block;
+          padding: .5em .75em;
+          color: #fff;
+          font-size: inherit;
+          line-height: normal;
+          vertical-align: middle;
+          background-color: #337ab7;
+          cursor: pointer;
+          border: 1px solid #ebebeb;
+          border-bottom-color: #e2e2e2;
+          border-radius: .25em;
+          border-color: #2e6da4;
+        }
+
+        .filebox input[type="file"] {  /* 파일 필드 숨기기 */
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip:rect(0,0,0,0);
+          border: 0;
+        }
+
+        .chat_in{
+
+        }
+
+        .chat_out{
+
+        }
+
+        </style>
+
+      </head>
+      <body>
+        <div class="background" >
+          <div class ="msgbox" id="messages">
+          </div>
+          <span class="userbox">
+            유저목록 넣을거야
+          </span>
+          <textarea id="input" class="msg" type="text" wrap="physical" style="color:black;"></textarea>
+          <button id="btn" class="send" type="button">&nbsp;&nbsp;&nbsp;&nbsp;전&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;송&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        </div>
+
+        <!-- 쓰기 효과!!! -->
+        <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+          <i class="paint brush icon"></i>
+          <span class="text">검정</span>
+          <div class="menu">
+            <div class="item active selected" data-value="white">
+              흰색
+            </div>
+            <div class="item" style="color:Gray;" data-value="Gray">
+              회색
+            </div>
+            <div class="item" style="color:Brown;" data-value="Brown">
+              갈색
+            </div>
+            <div class="item" style="color:red;" data-value="red">
+              빨강
+            </div>
+            <div class="item" style="color:orange;" data-value="orange">
+              주황
+            </div>
+            <div class="item" style="color:yellow;" data-value="yellow">
+              노랑
+            </div>
+            <div class="item" style="color:green;" data-value="green">
+              초록
+            </div>
+            <div class="item" style="color:blue;" data-value="blue">
+              파랑
+            </div>
+            <div class="item" style="color:navy;" data-value="navy">
+              네이비
+            </div>
+            <div class="item" style="color:purple;" data-value="purple">
+              보라
+            </div>
+            <div class="item" style="color:pink;" data-value="pink">
+              핑크
+            </div>
+          </div>
+        </div>
+        <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+          <i class="font icon"></i>
+          <span class="text">15px</span>
+          <div class="menu">
+            <div class="item active selected" data-value="15px">
+              15px
+            </div>
+            <div class="item" style="font-size:15px;" data-value="25px">
+              25px
+            </div>
+            <div class="item" style="font-size:20px;" data-value="40px">
+              40px
+            </div>
+          </div>
+        </div>
+        <div id="writeEvent" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+          <i class="star icon"></i>
+          <span class="text">효과 없음</span>
+          <div class="menu">
+            <div class="item active selected" data-value="event_1">
+              효과 없음
+            </div>
+            <div class="item" data-value="event_2">
+              지진
+            </div>
+            <div class="item" data-value="event_3">
+              벌렁벌렁
+            </div>
+            <div class="item" data-value="event_4">
+              찌글찌글
+            </div>
+            <div class="item" data-value="event_5">
+              반짝반짝
+            </div>
+            <div class="item" data-value="event_6">
+              흔들흔들
+            </div>
+            <div class="item" data-value="event_7">
+              바운스
+            </div>
+          </div>
+        </div>
+
+        <!-- 파일전송 -->
+        <form action="/upload" name="frm" method="post" enctype="multipart/form-data" style="display: inline-block;" id="fileForm">
+          <div class="filebox">
+            <label for="ex_file">업로드</label>
+            <input type="file" name="chatOneOne" id="ex_file">
+          </div>
+          <input type="submit" value="Upload" id="submitFile" style="display:none;">
+        </form>
+        <div class="ui active inline loader" style="display: none;" id="fileLoader"></div>
+      </body>
+
+      <script>
+
+      //소켓 IO 시작~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+      var text_color = "#FFFFFF";
+      var text_size = "15px";
+      var text_event = "event_1";
+
+      $(function(){
+        var MBox = document.getElementById("messages");
+        var socket = io.connect();
+
+        //최초 접속 했을 때
+        socket.emit('talk chat_in', "(나중 세션으로 넣어)님이 접속하였습니다.");
+
+        //최초 접속
+        socket.on('talk chat_in', function (msg) {
+          $('#messages').append($('<p align="center" class="chat_in" style="display: none">').text(msg));
+          $('.chat_in').last().transition('fly right');
+          MBox.scrollTop = MBox.scrollHeight;
+        });
+
+        //나갔을 때
+        socket.on('talk chat_out', function () {
+          var outText = "(나중 세션으로 넣어)님이 퇴장하였습니다.";
+          $('#messages').append($('<p align="center" class="chat_out" style="display: none">').text(outText));
+          $('.chat_out').last().transition('fly left');
+          MBox.scrollTop = MBox.scrollHeight;
+        });
+
+        socket.on('my message', function (msg) {
+          if(msg.content != "")
+          {
+            msg.content = msg.content.replace(/</g,"&lt;").replace(/>/g,"&gt;");//나쁜놈들 방어
+            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            $('#messages').append($('<p align="center" class="talk me ' + msg.event + '" style="background-color:' + msg.color + '; border: 5px solid ' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
+            MBox.scrollTop = MBox.scrollHeight;
+
+            //마지막 글에 효과가 걸려있으면 실행!
+            doEvent();
+          }
+        });
+        socket.on('other message', function (msg) {
+          if(msg.content != "")
+          {
+            msg.content = msg.content.replace(/</g,"&lt;").replace(/>/g,"&gt;");//나쁜놈들 방어
+            var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p align="center" class="talk other ' + msg.event + '" style="background-color:' + msg.color + '; border: 5px solid ' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
+            MBox.scrollTop = MBox.scrollHeight;
+
+            //마지막 글에 효과가 걸려있으면 실행!
+            doEvent();
+          }
+        });
+        //사진 올리기
+        socket.on('my ImgMessage', function (Img_Path) {
+          var strArray = Img_Path.split('\\');
+          var tempString = "";
+          console.log(strArray[0]);
+
+          for(var i = 1; i < strArray.length; i++){
+            tempString += "/" + strArray[i];
+          }
+
+          $('#messages').append($('<p class="talk me" style="padding:0;">').html("<center><img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')></center>"));
+          MBox.scrollTop = MBox.scrollHeight;
+        });
+
+        socket.on('other ImgMessage', function (Img_Path) {
+          var strArray = Img_Path.split('\\');
+          var tempString = "";
+          for(var i = 1; i < strArray.length; i++){
+            tempString += "/" + strArray[i];
+          }
+
+          $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other" style="padding:0;"><img style="margin-left:auto; margin-right: auto;" class="ui medium rounded image" src="' + tempString + '" onclick=doImgPop("' + tempString + '")>');
+          MBox.scrollTop = MBox.scrollHeight;
+        });
+
+        $("#input").keyup(function(key){
+          var textVal = $("#input").val();
+          if(key.keyCode==13){
+            if(key.ctrlKey){
+              textVal = textVal + "\n";
+              $("#input").val(textVal);
+            }
+            else {  //엔터키 눌렀을 때
+              if(textVal.length > 1)
+              {
+                var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
+                socket.emit('message', data_json);
+                $("#input").val("");
+              }
+              else{
+                $("#input").val("");
+              }
+            }
+          }
+        });
+
+        //전송 버튼 클릭했을 때
+        $("#btn").on('click', function(){
+          var textVal = $("#input").val();
+          if(textVal != "")
+          {
+            var data_json = {"content" : textVal, "color" : text_color, "size" : text_size, "event" : text_event};
+            socket.emit('message', data_json);
+            $("#input").val("");
+          }
+        });
+
+        //이미지 뿅뿅!~~
+        function emitImg(Img_Path){
+          socket.emit('ImgMessage', Img_Path);
+        }
+
+        //파일 체크
+        function checkTitleFileType(obj){
+
+          pathpoint = obj.lastIndexOf('.');
+          filepoint = obj.substring(pathpoint+1,obj.length);
+          filetype = filepoint.toLowerCase();
+          if (filetype == 'gif'|| filetype == 'jpg' || filetype == 'jpeg'){
+
+            return true;
+          }else{
+
+            alert("파일 확장자는 gif, jpg, jpeg만 가능합니다." );
+            return false;
+          }
+        }
+
+        //최신글 이벤트 적용
+        function doEvent(){
+          if($('.talk').last().hasClass("event_1") != true){
+
+            if($('.talk').last().hasClass("event_2")){  //지진
+              $('.talk').last().transition("shake");
+            }else if($('.talk').last().hasClass("event_3")){  //벌렁벌렁
+              $('.talk').last().transition('pulse');
+              $('.talk').last().transition('pulse');
+            }else if($('.talk').last().hasClass("event_4")){  //찌글찌글
+              $('.talk').last().transition('jiggle');
+            }else if($('.talk').last().hasClass("event_5")){  //반짝반짝
+              $('.talk').last().transition('flash');
+            }else if($('.talk').last().hasClass("event_6")){  //흔들흔들
+              $('.talk').last().transition('tada');
+            }else if($('.talk').last().hasClass("event_7")){  //바운스
+              $('.talk').last().transition('bounce');
+            }
+          }
+        }
+
+        //파일 올리기
+        $("#ex_file").change(function(){
+          var fileType = $(this).val();
+          var file = document.getElementById("fileForm").chatOneOne;
+
+          // 사이즈체크
+          var maxSize  = 3 * 1024 * 1024    //3MB
+          var fileSize = 0;
+
+          // 브라우저 확인
+          var browser=navigator.appName;
+
+          // 익스플로러일 경우
+          if (browser=="Microsoft Internet Explorer")
+          {
+            var oas = new ActiveXObject("Scripting.FileSystemObject");
+            fileSize = oas.getFile( file.value ).size;
+          }
+          // 익스플로러가 아닐경우
+          else
+          {
+            fileSize = file.files[0].size;
+          }
+
+          if(fileSize > maxSize)
+          {
+            alert("첨부파일 사이즈는 3MB 이내로 등록 가능합니다.    ");
+            return;
+          }
+
+          if(checkTitleFileType(fileType)){
+            console.log("데이터 진입");
+            $("#submitFile").trigger('click');
+          }
+
+          $(this).val(null)
+        });
+
+        $("#submitFile").click(function(e){
+          e.preventDefault();
+          apply();
+          return false;
+        });
+
+
+        function apply()
+        {
+          // ajaxSubmit Option
+          var options = {
+            beforeSubmit : applyBefore, // ajaxSubmit 전처리 함수
+            success      : applyAfter,  // ajaxSubmit 후처리 함수
+            error        : errorMessage
+          };
+          // frmApply Form Data값을 testAjax.html 으로 ajax 전송
+          $("#fileForm").ajaxSubmit(options);
+        }
+
+        function applyBefore(formData, jqForm, options)
+        {
+          // ajaxSubmit 전 처리 작업 영역
+          $("#fileLoader").css("display", "inline-block");
+          return true;
+        }
+
+        function applyAfter(response)
+        {
+          console.log("후처리 성공~" + response );
+          $("#fileLoader").css("display", "none");
+          //소켓 에밋
+          emitImg(response);
+        }
+
+        function errorMessage(xhr)
+        {
+          console.log("에러다~" + JSON.stringify(xhr) );
+        }
+      });
+
+
+      //소켓 IO 끝~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+      $('.ui.dropdown').dropdown();
+
+      $('#writeColor.ui.dropdown').dropdown({
+        onChange: function(value){
+
+          switch (value) {
+            case "white": //흰색
+            $('#input.msg').css("color", "black");
+            text_color = "#FFFFFF";
+            break;
+            case "Gray": //회색
+            $('#input.msg').css("color", "Gray");
+            text_color = "#E0E0E0";
+            break;
+            case "Brown": //갈색
+            $('#input.msg').css("color", "Gray");
+            text_color = "#8D6E63";
+            break;
+            case "red": //레드
+            $('#input.msg').css("color", "red");
+            text_color = "#EF5350";
+            break;
+            case "orange": //주황
+            $('#input.msg').css("color", "orange");
+            text_color = "#FFA726";
+            break;
+            case "yellow": //노랑
+            $('#input.msg').css("color", "yellow");
+            text_color = "#FFEE58";
+            break;
+            case "green": //초록
+            $('#input.msg').css("color", "green");
+            text_color = "#66BB6A";
+            break;
+            case "blue": //블루
+            $('#input.msg').css("color", "blue");
+            text_color = "#42A5F5";
+            break;
+            case "navy": //남색
+            $('#input.msg').css("color", "navy");
+            text_color = "#5C6BC0";
+            break;
+            case "purple": //보라
+            $('#input.msg').css("color", "purple");
+            text_color = "#AB47BC";
+            break;
+            case "pink": //핑크
+            $('#input.msg').css("color", "pink");
+            text_color = "#EC407A";
+            break;
+            default:
+
+          }
+        }
+      });
+      $('#writeSize.ui.dropdown').dropdown({
+        onChange: function(value){
+
+          switch (value) {
+            case "15px": //10
+            $('#input.msg').css("font-size", "15px");
+            text_size = "15px";
+            break;
+            case "25px": //15
+            $('#input.msg').css("font-size", "25px");
+            text_size = "25px";
+            break;
+            case "40px": //20px
+            $('#input.msg').css("font-size", "40px");
+            text_size = "40px";
+            break;
+            default:
+
+          }
+        }
+      });
+      $('#writeEvent.ui.dropdown').dropdown({
+        onChange: function(value){
+
+          switch (value) {
+            case "event_1": //event_1
+            text_event = "event_1";
+            break;
+            case "event_2": //지진
+            text_event = "event_2";
+            break;
+            case "event_3": //벌렁벌렁
+            text_event = "event_3";
+            break;
+            case "event_4": //찌글찌글
+            text_event = "event_4";
+            break;
+            case "event_5": //반짝반짝
+            text_event = "event_5";
+            break;
+            case "event_6": //흔들흔들
+            text_event = "event_6";
+            break;
+            case "event_7": //바운스
+            text_event = "event_7";
+            break;
+            default:
+
+          }
+        }
+      });
+
+      // 이미지 클릭시 원본 크기로 팝업 보기
+      function doImgPop(img){
+        img1= new Image();
+        img1.src=(img);
+        imgControll(img);
+      }
+
+      function imgControll(img){
+        if((img1.width!=0)&&(img1.height!=0)){
+          viewImage(img);
+        }
+        else{
+          controller="imgControll('"+img+"')";
+          intervalID=setTimeout(controller,20);
+        }
+      }
+
+      function viewImage(img){
+        W=img1.width;
+        H=img1.height;
+        O="width="+W+",height="+H+",scrollbars=yes";
+        imgWin=window.open("","",O);
+        imgWin.document.write("<html><head><title>원본크기 이미지</title></head>");
+        imgWin.document.write("<body topmargin=0 leftmargin=0>");
+        imgWin.document.write("<img src="+img+" onclick='self.close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+        imgWin.document.close();
+      }
+
+
+      </script>
+      </html>

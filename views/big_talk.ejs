@@ -9,12 +9,29 @@
   <script src="js/ajaxSubmit.js"></script>
   <link type="text/css" rel="stylesheet" href="css/semantic.min.css" />
   <style media="screen">
-  .ui.feed{
-    margin : 0 0 !important;
-  }
+    /* for MS계열 브라우저 */
+    @keyframes blink {
+     from  {background-color: green;}
+     to {background-color: auto;}
+    }
+
+    /* for Chrome, Safari */
+    @-webkit-keyframes blink {
+     from {background-color: green;}
+     to {background-color: auto;}
+    }
+
+    /* 깜박깜박 */
+    .blinkcss {
+        animation: blink 1s;
+    }
+
+    .ui.feed{
+      margin : 0 0 !important;
+      position: absolute;
+    }
 
   .talk {
-    position: relative;
     padding: 15px;
     margin: 10px 0 10px;
     color: black;
@@ -118,11 +135,21 @@
         }
 
         .chat_in{
+          display: none;
+          position: absolute;
+          line-height: 40;
+          padding-left: 230px;
 
+          color: green;
         }
 
         .chat_out{
+          display: none;
+          position: absolute;
+          line-height: 40;
+          padding-left: 230px;
 
+          color: red;
         }
 
         </style>
@@ -140,11 +167,11 @@
         </div>
 
         <!-- 쓰기 효과!!! -->
-        <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+        <div id="writeColor" class="ui floating labeled icon dropdown button" style="margin-top: 5px; z-index:999;">
           <i class="paint brush icon"></i>
-          <span class="text">검정</span>
+          <span class="text">흰색</span>
           <div class="menu">
-            <div class="item active selected" data-value="white">
+            <div class="item" data-value="white">
               흰색
             </div>
             <div class="item" style="color:Gray;" data-value="Gray">
@@ -179,7 +206,7 @@
             </div>
           </div>
         </div>
-        <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px;">
+        <div id="writeSize" class="ui floating labeled icon dropdown button" style="margin-top: 5px; z-index:999;">
           <i class="font icon"></i>
           <span class="text">15px</span>
           <div class="menu">
@@ -235,11 +262,19 @@
 
       <script>
 
+      var tmep = $("#writeColor").find(".item");
+      var i = Math.floor(Math.random() * tmep.length);
+      var tempColor = $("#writeColor").find(".item:eq(" + i + ")").attr("data-value");
+
       //소켓 IO 시작~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
       var text_color = "#FFFFFF";
       var text_size = "15px";
       var text_event = "event_1";
+
+      var talkArray = new Array();
+
+      var tempIndex = 0;
 
       $(function(){
         var MBox = document.getElementById("messages");
@@ -250,55 +285,185 @@
 
         //최초 접속
         socket.on('talk chat_in', function (msg) {
-          $('#messages').append($('<p align="center" class="chat_in" style="display: none">').text(msg));
-          $('.chat_in').last().transition('fly right');
+          $("#messages").append($('<p align="center" class="chat_in">').text(msg));
+          var chat_inTAG = $('.chat_in').last();
+          chat_inTAG.transition('fly right');
+          setTimeout(function(){ chat_inTAG.last().transition('fly left'); }, 1500);
           MBox.scrollTop = MBox.scrollHeight;
         });
 
         //나갔을 때
-        socket.on('talk chat_out', function () {
-          var outText = "(나중 세션으로 넣어)님이 퇴장하였습니다.";
-          $('#messages').append($('<p align="center" class="chat_out" style="display: none">').text(outText));
-          $('.chat_out').last().transition('fly left');
+        socket.on('talk chat_out', function (outText) {
+          $("#messages").append($('<p align="center" class="chat_out">').text(outText));
+          var chat_outTAG = $('.chat_out').last();
+          chat_outTAG.transition('fly left');
+          setTimeout(function(){ chat_outTAG.last().transition('fly right'); }, 1500);
           MBox.scrollTop = MBox.scrollHeight;
         });
 
+        //내가 보낸 메시지
         socket.on('my message', function (msg) {
           if(msg.content != "")
           {
             msg.content = msg.content.replace(/</g,"&lt;").replace(/>/g,"&gt;");//나쁜놈들 방어
             var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            $('#messages').append($('<p align="center" class="talk me ' + msg.event + '" style="background-color:' + msg.color + '; border: 5px solid ' + msg.color + '; font-size:' + msg.size + ';">').html(htmlMsg));
-            MBox.scrollTop = MBox.scrollHeight;
+
+            //var randx = Math.floor(Math.random() * 450);
+            //var randy = Math.floor(Math.random() * 510);
+
+            var randx = null;
+            var randy = null;
+
+            switch (tempIndex % 4) {
+              case 0:
+                randx = Math.floor(Math.random() * 225);
+                randy = Math.floor(Math.random() * 255);
+                break;
+              case 1:
+                randx = Math.floor(Math.random() * 225) + 226;
+                randy = Math.floor(Math.random() * 255);
+                break;
+              case 2:
+                randx = Math.floor(Math.random() * 225) + 226;
+                randy = Math.floor(Math.random() * 255) + 256;
+                break;
+              case 3:
+                randx = Math.floor(Math.random() * 225);
+                randy = Math.floor(Math.random() * 255) + 256;
+                break;
+            }
+
+            var isSetEvent = "";
+            if(msg.event == "event_1"){
+              isSetEvent = "blinkcss";
+            }
+
+            $('#messages').append('<div class="ui feed"><div class="event" style="margin:' + randy + 'px 0px 0px ' + (randx - 50) + 'px;"><div class="label" style="z-index:1;"><img style="width:150%; margin-top: 7px; margin-left: 55px;" src="/img/no_img.gif"></div><div class="content"><p align="center" class="talk me ' + msg.event + ' ' + isSetEvent + '" style="background-color:' + msg.color + '; border: 1px solid black; font-size:' + msg.size + '; padding-left: 60px;">'+ htmlMsg);
+            tempIndex++;
 
             //마지막 글에 효과가 걸려있으면 실행!
             doEvent();
+
+            console.log("x축 - " + (randx - 50));
+            console.log("y축 - " + randy);
+
+            talkArray.unshift($(".feed:last"));
+
+            for(var i = 0; i < talkArray.length; i++){
+              if(i > 20){ //삭제
+                talkArray[i].remove();
+                talkArray.splice(i, 1);
+              }else{
+                talkArray[i].css("z-index", 20 - i);
+                talkArray[i].css("opacity", (1 - (i * 0.05)));
+              }
+            }
           }
         });
+
+        //남이 보낸 메시지
         socket.on('other message', function (msg) {
           if(msg.content != "")
           {
             msg.content = msg.content.replace(/</g,"&lt;").replace(/>/g,"&gt;");//나쁜놈들 방어
             var htmlMsg = msg.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p align="center" class="talk other ' + msg.event + '" style="background-color:' + msg.color + '; border: 5px solid ' + msg.color + '; font-size:' + msg.size + ';">'+ htmlMsg);
-            MBox.scrollTop = MBox.scrollHeight;
+
+            var randx = null;
+            var randy = null;
+
+            switch (tempIndex % 4) {
+              case 0:
+                randx = Math.floor(Math.random() * 225);
+                randy = Math.floor(Math.random() * 255);
+                break;
+              case 1:
+                randx = Math.floor(Math.random() * 225) + 225;
+                randy = Math.floor(Math.random() * 255);
+                break;
+              case 2:
+                randx = Math.floor(Math.random() * 225) + 225;
+                randy = Math.floor(Math.random() * 255) + 255;
+                break;
+              case 3:
+                randx = Math.floor(Math.random() * 225);
+                randy = Math.floor(Math.random() * 255) + 255;
+                break;
+            }
+
+            var isSetEvent = "";
+            if(msg.event == "event_1"){
+              isSetEvent = "blinkcss";
+            }
+
+            $('#messages').append('<div class="ui feed"><div class="event" style="margin:' + randy + 'px 0px 0px ' + (randx - 50) + 'px;"><div class="label" style="z-index:1;"><img style="width:150%; margin-top: 7px; margin-left: 55px;" src="/img/no_img.gif"></div><div class="content"><p align="center" class="talk other ' + msg.event + ' ' + isSetEvent + '" style="background-color:' + msg.color + '; border: 1px solid black; font-size:' + msg.size + '; padding-left: 60px;">'+ htmlMsg);
+            tempIndex++;
 
             //마지막 글에 효과가 걸려있으면 실행!
             doEvent();
+
+            talkArray.unshift($(".feed:last"));
+
+            for(var i = 0; i < talkArray.length; i++){
+              if(i > 20){ //삭제
+                talkArray[i].remove();
+                talkArray.splice(i, 1);
+              }else{
+                talkArray[i].css("z-index", 20 - i);
+                talkArray[i].css("opacity", (1 - (i * 0.05)));
+              }
+            }
           }
         });
+
         //사진 올리기
         socket.on('my ImgMessage', function (Img_Path) {
           var strArray = Img_Path.split('\\');
           var tempString = "";
-          console.log(strArray[0]);
+
+          var randx = null;
+          var randy = null;
+
+          switch (tempIndex % 4) {
+            case 0:
+              randx = Math.floor(Math.random() * 225);
+              randy = Math.floor(Math.random() * 255);
+              break;
+            case 1:
+              randx = Math.floor(Math.random() * 225) + 225;
+              randy = Math.floor(Math.random() * 255);
+              break;
+            case 2:
+              randx = Math.floor(Math.random() * 225) + 225;
+              randy = Math.floor(Math.random() * 255) + 255;
+              break;
+            case 3:
+              randx = Math.floor(Math.random() * 225);
+              randy = Math.floor(Math.random() * 255) + 255;
+              break;
+          }
 
           for(var i = 1; i < strArray.length; i++){
             tempString += "/" + strArray[i];
           }
+          $('#messages').append('<div class="ui feed"><div class="event" style="margin:' + randy + 'px 0px 0px ' + (randx - 50) + 'px;"><div class="label" style="z-index:1;"><img style="width:150%; margin-top: 7px; margin-left: 55px;" src="/img/no_img.gif"></div><div class="content"><img class="ui medium rounded image" src="' + tempString + '" onclick=doImgPop("' + tempString + '")>');
+          //$('#messages').append($('<p class="talk me" style="padding:0;">').html("<center><img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')></center>"));
 
-          $('#messages').append($('<p class="talk me" style="padding:0;">').html("<center><img class='ui medium rounded image' src='" + tempString + "' onclick=doImgPop('" + tempString + "')></center>"));
-          MBox.scrollTop = MBox.scrollHeight;
+          tempIndex++;
+
+          //마지막 글에 효과가 걸려있으면 실행!
+          doEvent();
+
+          talkArray.unshift($(".feed:last"));
+
+          for(var i = 0; i < talkArray.length; i++){
+            if(i > 20){ //삭제
+              talkArray[i].remove();
+              talkArray.splice(i, 1);
+            }else{
+              talkArray[i].css("z-index", 20 - i);
+              talkArray[i].css("opacity", (1 - (i * 0.05)));
+            }
+          }
         });
 
         socket.on('other ImgMessage', function (Img_Path) {
@@ -309,7 +474,6 @@
           }
 
           $('#messages').append('<div class="ui feed"><div class="event"><div class="label"><img style="width:150%; margin-top: 12px;" src="/img/no_img.gif"></div><div class="content"><p class="talk other" style="padding:0;"><img style="margin-left:auto; margin-right: auto;" class="ui medium rounded image" src="' + tempString + '" onclick=doImgPop("' + tempString + '")>');
-          MBox.scrollTop = MBox.scrollHeight;
         });
 
         $("#input").keyup(function(key){
@@ -523,6 +687,9 @@
           }
         }
       });
+
+      $('#writeColor').dropdown("set selected", tempColor);
+
       $('#writeSize.ui.dropdown').dropdown({
         onChange: function(value){
 

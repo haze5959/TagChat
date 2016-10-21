@@ -9,7 +9,8 @@ module.exports = function(server){
 
     // //채팅방 나갔을 때
     socket.on('disconnect', function(){
-      socket.broadcast.emit('talk chat_out');
+      var outText = "(나중 세션으로 넣어)님이 퇴장하였습니다.";
+      socket.broadcast.emit('talk chat_out', outText);
     });
 
     //메시지 교환

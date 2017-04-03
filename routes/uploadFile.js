@@ -2,6 +2,7 @@
 var multer = require('multer');
 var dateFormat = require('dateformat');
 var fs = require('fs');
+var replace = require('replace');
 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -25,7 +26,7 @@ var storage =   multer.diskStorage({
             type: file.mimetype.split('/')[0]
           };
 
-    callback(null, Date.now()  + '-' + file.originalname);
+    callback(null, Date.now()  + '-' + file.originalname.replace(/ /g, "_"));
 
   }
 });

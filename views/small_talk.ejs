@@ -343,7 +343,7 @@
                       });
                       //사진 올리기
                       socket.on('my ImgMessage', function (Img_Path) {
-                        var strArray = Img_Path.split('\\');
+                        var strArray = Img_Path.split('/');
                         var tempString = "";
                         console.log(strArray[0]);
 
@@ -356,7 +356,7 @@
                       });
 
                       socket.on('other ImgMessage', function (Img_Path) {
-                        var strArray = Img_Path.split('\\');
+                        var strArray = Img_Path.split('/');
                         var tempString = "";
                         for(var i = 1; i < strArray.length; i++){
                           tempString += "/" + strArray[i];
